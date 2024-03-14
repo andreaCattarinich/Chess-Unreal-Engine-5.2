@@ -67,6 +67,14 @@ void ATTT_GameMode::BeginPlay()
 	PlayerNames.Add(1, "AI");
 
 	ChoosePlayerAndStartGame();
+
+	/******** LIST OF MOVES **********/
+	
+
+
+	/******** END LIST OF MOVES **********/
+
+
 }
 
 void ATTT_GameMode::SetSelectedTile(const FVector2D Position) const

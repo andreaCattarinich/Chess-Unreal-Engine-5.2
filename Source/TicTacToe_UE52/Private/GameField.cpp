@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
+
 #include "GameField.h"
 #include "Kismet/GameplayStatics.h"
 #include "Piece.h"
@@ -36,6 +38,13 @@ void AGameField::OnConstruction(const FTransform& Transform)
 void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (ListOfMovesWidgetRef)
+	{
+		ListOfMovesWidgetRef->AddToViewport(0);
+	}
+
+
 
 	GenerateField();
 	GeneratePieces();

@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Blueprint/UserWidget.h"
 #include "GameField.generated.h"
 
 // macro declaration for a dynamic multicast delegate
@@ -177,4 +178,11 @@ public:
 	// Remove all Pieces from the field
 	UFUNCTION(BlueprintCallable) 
 	void ResetField();
+
+
+	/******** LIST OF MOVES **********/
+public:
+	UPROPERTY(EditAnyWhere)
+		UUserWidget* ListOfMovesWidgetRef;
+	/******** END LIST OF MOVES **********/
 };

@@ -152,4 +152,10 @@ public:
 	// Revert status of game (2 moves backward)
 	void UndoGesture(bool bIsGameMove = false);
 
+	/******** LIST OF MOVES **********/
+
+
+	/******** END LIST OF MOVES **********/
+
+
 };
