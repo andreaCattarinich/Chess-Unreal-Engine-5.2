@@ -49,7 +49,7 @@ void ATTT_MinimaxPlayer::OnTurn()
 			NodesVisited = 0;
 			PossibleFutureGames = 0;
 
-			FMove BestMove = FindBestMove(GameMode->GField->TileMap);
+			FMove BestMove = FindBestMove(GameMode->GField->TileArray);
 
 			GameMode->SetSelectedTile(BestMove.Start);
 
@@ -77,7 +77,7 @@ void ATTT_MinimaxPlayer::OnLose()
 	// GameInstance->SetTurnMessage(TEXT("AI Loses!"));
 }
 
-FMove ATTT_MinimaxPlayer::FindBestMove(TMap<FVector2D, ATile*>& Board)
+FMove ATTT_MinimaxPlayer::FindBestMove(TArray<ATile*> Board)
 {
 	//return TPair<FVector2D, FVector2D>();
 	
@@ -113,7 +113,7 @@ FMove ATTT_MinimaxPlayer::FindBestMove(TMap<FVector2D, ATile*>& Board)
 }
 
 FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
-	TMap<FVector2D, ATile*>& Board,
+	TArray<ATile*>& Board,
 	const int32 Depth,
 	const bool bIsMax
 )
@@ -122,7 +122,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 
 	if (Depth == 0)
 	{
-		return FEvaluation(EvaluateChessGrid(Board, bIsMax), FMove());
+		return FEvaluation(EvaluateChessGrid(GameMode->GField->TileArray, bIsMax), FMove());
 	}
 	
 	FMove BestMove{};
@@ -132,12 +132,17 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 		int32 Max_Eval = -10000;
 
 		// ITERO SU TUTTE LE TILE
-		for (const auto& CurrentTile : GameMode->GField->TileArray)
+		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
 			// CERCO SOLO I PEZZI DEL MAXIMIZER
 			if (CurrentTile->GetOwner() != 1)
 			{
 				continue;
+			}
+
+			if(CurrentTile->GetPiece()->GetPieceType() == EPieceType::KNIGHT)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("KNIGHT"));
 			}
 		
 			// PRENDO TUTTE LE MOSSE
@@ -161,7 +166,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				
 				GameMode->CurrentPlayer = RealCurrentPlayer2;
 
-				const FEvaluation Minimax_Return = MiniMaxChess(Board, Depth - 1, !bIsMax);
+				const FEvaluation Minimax_Return = MiniMaxChess(GameMode->GField->TileArray, Depth - 1, !bIsMax);
 
 				const int32 Current_Eval = Minimax_Return.Value;
 
@@ -182,7 +187,6 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				if (Current_Eval == Max_Eval && FMath::Rand() % 2)
 				{
 					Max_Eval = Current_Eval;
-					Max_Eval = Current_Eval;
 					BestMove = FMove(
 						CurrentTile->GetPiece()->GetPieceID(),
 						CurrentTile->GetGridPosition(),
@@ -199,7 +203,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 	{
 		int32 Min_Eval = 10000;
 
-		for (const auto& CurrentTile : GameMode->GField->TileArray)
+		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
 			if(CurrentTile->GetOwner() != 0)
 			{
@@ -212,7 +216,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 
 			const int32 RealCurrentPlayer = GameMode->CurrentPlayer;
 			GameMode->CurrentPlayer = 0;
-			TArray<FVector2D> CurrentPieceLegalMoves = GameMode->GField->LegalMoves(CurrentPiecePosition);
+			TArray<FVector2D> CurrentPieceLegalMoves = GameMode->GField->LegalMoves(CurrentTile->GetGridPosition());
 			GameMode->CurrentPlayer = RealCurrentPlayer;
 
 			for (const auto& Move : CurrentPieceLegalMoves)
@@ -225,7 +229,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				
 				GameMode->CurrentPlayer = RealCurrentPlayer2;
 
-				const FEvaluation Minimax_Return = MiniMaxChess(Board, Depth - 1, !bIsMax);
+				const FEvaluation Minimax_Return = MiniMaxChess(GameMode->GField->TileArray, Depth - 1, !bIsMax);
 
 				const int32 Current_Eval = Minimax_Return.Value;
 
@@ -259,7 +263,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 	}
 }
 
-int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TMap<FVector2D, ATile*>& Board,	const bool bIsMax) const
+int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) const
 {
 	// TODO: FARE L'EURISTICA
 	/*
@@ -282,6 +286,10 @@ int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TMap<FVector2D, ATile*>& Board,	cons
 	}
 	
 	PossibleFutureGames++;
+	if(STD_DEPTH % 2 == 1)
+	{
+		bIsMax = !bIsMax;
+	}
 	if (bIsMax)
 	{
 		return BlackScore - WhiteScore;

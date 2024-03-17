@@ -76,16 +76,16 @@ public:
 	
 	/**** METHODS ****/
 	int32 EvaluateChessGrid(
-		TMap<FVector2D, ATile*>& Board,
+		TArray<ATile*>& Board,
 		bool bIsMax
 	) const;
 
 	FEvaluation MiniMaxChess(
-		TMap<FVector2D, ATile*>& Board,
+		TArray<ATile*>& Board,
 		int32 Depth,
 		bool bIsMax
 	);
 
-	FMove FindBestMove(TMap<FVector2D, ATile*>& Board);
+	FMove FindBestMove(TArray<ATile*> Board);
 
 };
