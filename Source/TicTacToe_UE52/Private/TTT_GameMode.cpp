@@ -1,16 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "TTT_GameMode.h"
+
 #include "Queen.h"
 #include "Rook.h"
 #include "Bishop.h"
 #include "Knight.h"
 
-#include "TTT_GameMode.h"
 #include "GameField.h"
 #include "TTT_PlayerController.h"
 #include "TTT_HumanPlayer.h"
 #include "TTT_RandomPlayer.h"
 #include "TTT_MinimaxPlayer.h"
+
+#include "MovesPanel.h"
 
 #include "EngineUtils.h"
 
@@ -24,6 +27,7 @@ ATTT_GameMode::ATTT_GameMode()
 	CurrentPlayer = -1;
 	MoveCounter = -1;
 	GField = nullptr;
+	MovesPanel = nullptr;
 }
 
 void ATTT_GameMode::BeginPlay()
@@ -66,15 +70,14 @@ void ATTT_GameMode::BeginPlay()
 	Players.Add(AI);
 	PlayerNames.Add(1, "AI");
 
+
+	MovesPanel = CreateWidget<UMovesPanel>(GetGameInstance(), WidgetClass);
+
+	if(MovesPanel)
+	{
+		MovesPanel->AddToViewport(0);		
+	}
 	ChoosePlayerAndStartGame();
-
-	/******** LIST OF MOVES **********/
-	
-
-
-	/******** END LIST OF MOVES **********/
-
-
 }
 
 void ATTT_GameMode::SetSelectedTile(const FVector2D Position) const
@@ -171,11 +174,13 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 		// Aggiungo 1 alle mosse eseguite dopo la promozione
 		Piece->MovesSincePromotion++;
 	}
-
-	Moves.Add(FMove(IDPieceToMove, StartPosition, EndPosition, IDPieceEaten));
+	const FMove CurrentMove = FMove(IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
+	Moves.Add(CurrentMove);
 
 	if(bIsGameMove)
 	{
+		MovesPanel->AddMoveToPanel(CurrentMove);
+		
 		if (!IsWinMove())
 		{
 			TurnNextPlayer();
@@ -194,6 +199,7 @@ void ATTT_GameMode::UndoMove(const bool bIsGameMove)
 	if(bIsGameMove)
 	{
 		SetPieceLocation(LastMove.Start);
+		MovesPanel->PopFromPanel();
 	}
 
 	if(LastMove.IDPieceEaten != -1)

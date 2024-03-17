@@ -3,6 +3,7 @@
 #include "Piece.h"
 #include "GameField.h"
 #include "TTT_GameMode.h"
+#include "UObject/ConstructorHelpers.h"
 
 int32 APiece::NewPieceID = 0;
 
@@ -20,6 +21,8 @@ APiece::APiece()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
+	// TODO: a volte non funziona.
+	// La STATICMESH non viene correttamente caricata.
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
 		TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
 

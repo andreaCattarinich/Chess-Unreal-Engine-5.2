@@ -2,31 +2,29 @@
 
 #pragma once
 
+#include "TTT_GameMode.h"
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-#include "ButtonWidget.generated.h"
+#include "MoveWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class TICTACTOE_UE52_API UButtonWidget : public UUserWidget
+class TICTACTOE_UE52_API UMoveWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-public:
 
-	UPROPERTY(meta = (BindWidget))
+public:
+	UPROPERTY(meta =(BindWidget))
 	UButton* Btn;
 
-	//UPROPERTY(meta = (BindWidget))
-	//UTextBlock* Text;
+	UPROPERTY(meta =(BindWidget))
+	UTextBlock* TextLabel;
 
 	int MoveToGo;
 
-	void SetData(int value);
+	void SetData(const FMove& Move);
 
 	UFUNCTION()
 	void OnBtnClick();

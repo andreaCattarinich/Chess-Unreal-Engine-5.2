@@ -90,7 +90,7 @@ public:
 	// TSubclassOf is a template class that provides UClass type safety.
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<AGameField> GameFieldClass;
-
+	
 	// Field size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 FieldSize;
@@ -99,8 +99,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UMovesPanel> WidgetClass;
 
-
+	UPROPERTY(VisibleAnywhere)
+	UMovesPanel* MovesPanel;
 	// ************ SETTERS ************
 	// Esegue tutte le operazioni sulla GameField per selezionare la Tile
 	// cliccata dallo Human Player (oppure la Tile cliccata dal
