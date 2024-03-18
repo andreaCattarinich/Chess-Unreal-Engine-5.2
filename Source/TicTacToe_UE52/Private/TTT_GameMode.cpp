@@ -331,6 +331,7 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 	// TODO: aggiungere la possibilità di scelta tra Knight, Bishop, Rook, Queen
 	// - Ricordare gli include
 
+	// GENERA LA REGINA
 	GField->GeneratePiece<AQueen>(Position, Player);
 	(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
 }

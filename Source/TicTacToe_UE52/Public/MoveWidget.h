@@ -26,6 +26,15 @@ public:
 
 	void SetData(const FMove& Move);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	ATTT_GameMode* GameMode;
+
+	FString TypeToChar(EPieceType Type) const;
+
+	FString PositionToStringMove(FVector2D Position) const;
+
+	FString IntToLetter(int32 Value) const;
+
 	UFUNCTION()
 	void OnBtnClick();
 };

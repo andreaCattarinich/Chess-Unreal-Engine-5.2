@@ -297,6 +297,7 @@ void AGameField::GeneratePiece(FVector2D Position, int32 PlayerOwner)
 	SpawnedPiece->SetPlayerOwner(PlayerOwner);
 	SpawnedPiece->SetTexture();
 	
+	PieceMap.Add(SpawnedPiece->GetPieceID(), SpawnedPiece);
 	(*TileMap.Find(Position))->SetTileStatus(PlayerOwner, ETileStatus::OCCUPIED, SpawnedPiece);
 
 	// TODO: togliere

@@ -46,6 +46,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		TMap<FVector2D, ATile*> TileMap;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		TMap<int32, APiece*> PieceMap;
+	
 	UPROPERTY(EditDefaultsOnly)
 		FVector2D SelectedTile;
 
