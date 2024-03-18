@@ -173,18 +173,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				// UNDO
 				GameMode->UndoMove(false);
 
-				if (Current_Eval > Max_Eval)
-				{
-					Max_Eval = Current_Eval;
-					BestMove = FMove(
-						CurrentTile->GetPiece()->GetPieceID(),
-						CurrentTile->GetGridPosition(),
-						Move,
-						-1
-					);
-				}
-				
-				if (Current_Eval == Max_Eval && FMath::Rand() % 2)
+				if (Current_Eval > Max_Eval || Current_Eval == Max_Eval && FMath::Rand() % 2)
 				{
 					Max_Eval = Current_Eval;
 					BestMove = FMove(
@@ -235,18 +224,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 
 				GameMode->UndoMove(false);
 
-				if (Current_Eval < Min_Eval)
-				{
-					Min_Eval = Current_Eval;
-					BestMove = FMove(
-						CurrentTile->GetPiece()->GetPieceID(),
-						CurrentTile->GetGridPosition(),
-						Move,
-						-1
-					);
-				}
-
-				if (Current_Eval == Min_Eval && FMath::Rand() % 2)
+				if (Current_Eval < Min_Eval || Current_Eval == Min_Eval && FMath::Rand() % 2)
 				{
 					Min_Eval = Current_Eval;
 					BestMove = FMove(
@@ -290,6 +268,7 @@ int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) 
 	{
 		bIsMax = !bIsMax;
 	}
+	
 	if (bIsMax)
 	{
 		return BlackScore - WhiteScore;
