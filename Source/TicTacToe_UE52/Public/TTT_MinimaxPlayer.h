@@ -73,6 +73,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	mutable int32 PossibleFutureGames;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	mutable int32 WhitePruning;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	mutable int32 BlackPruning;
+
 	
 	/**** METHODS ****/
 	int32 EvaluateChessGrid(
@@ -83,6 +89,14 @@ public:
 	FEvaluation MiniMaxChess(
 		TArray<ATile*>& Board,
 		int32 Depth,
+		bool bIsMax
+	);
+
+	FEvaluation MiniMaxChessPruning(
+		TArray<ATile*>& Board,
+		int32 Depth,
+		int32 Alpha,
+		int32 Beta,
 		bool bIsMax
 	);
 
