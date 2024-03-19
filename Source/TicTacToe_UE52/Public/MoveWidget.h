@@ -16,8 +16,12 @@ class TICTACTOE_UE52_API UMoveWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+
 	UPROPERTY(meta =(BindWidget))
 	UButton* Btn;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Number;
 
 	UPROPERTY(meta =(BindWidget))
 	UTextBlock* TextLabel;

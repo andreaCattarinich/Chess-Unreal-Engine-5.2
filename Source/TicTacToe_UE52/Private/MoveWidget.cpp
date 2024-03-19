@@ -26,7 +26,7 @@ void UMoveWidget::SetData(const FMove& Move)
 
 	StringMove += PositionToStringMove(Move.End);
 
-	
+	Number->SetText(FText::FromString("1"));
 	TextLabel->SetText(FText::FromString(StringMove));
 	Btn->OnClicked.AddDynamic(this, &UMoveWidget::OnBtnClick);
 }

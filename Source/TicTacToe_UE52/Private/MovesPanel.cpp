@@ -40,7 +40,7 @@ void UMovesPanel::AddMoveToPanel(const FMove& Move)
 	if(MoveWidgetRef)
 	{
 		UUserWidget* widget = CreateWidget(this, MoveWidgetRef);
-		VerticalBox->AddChildToVerticalBox(widget);
+		VerticalBox->AddChild(widget);
 		//ListOfMoves->AddItem(widget);
 		UMoveWidget* move = Cast<UMoveWidget>(widget);
 		move->SetData(Move);

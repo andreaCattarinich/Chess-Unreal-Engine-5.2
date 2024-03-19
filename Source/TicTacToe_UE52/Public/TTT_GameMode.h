@@ -18,6 +18,8 @@ struct FMove
 {
 	GENERATED_BODY()
 
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Moves")
 		int32 IDPiece;
 	

@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "TTT_GameMode.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/ListView.h"
+
 #include "Components/VerticalBox.h"
+#include "Components/ScrollBox.h"
 #include "MovesPanel.generated.h"
 
 //class ATTT_GameMode;
@@ -22,13 +23,13 @@ protected:
 	/****************************/
 
 	UPROPERTY(meta = (BindWidget))
-	UVerticalBox* VerticalBox;
+	UScrollBox* VerticalBox;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UMoveWidget> MoveWidgetRef;
 
-	UPROPERTY(meta = (BindWidget))
-	UListView* ListOfMoves;
+	//UPROPERTY(meta = (BindWidget))
+	//UListView* ListOfMoves;
 
 public:
 	void AddMoveToPanel(const FMove& Move);
@@ -38,12 +39,7 @@ protected:
 
 	/****************************/
 	void GenerateRandom();
-	
-	//UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	//class UTextBlock* TitleLabel;
 
-	//UPROPERTY(meta = (BindWidget))
-	//class UButton* GenerateButton;
 
 	UFUNCTION()
 	void OnGenerateButtonClicked();
