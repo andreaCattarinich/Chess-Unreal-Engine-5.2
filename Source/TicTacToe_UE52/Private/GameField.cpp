@@ -422,6 +422,6 @@ void AGameField::ResetField()
 	*/
 	
 
-	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
-	GameMode->UndoGesture(true);
+	//ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	//GameMode->UndoGesture(true);
 }

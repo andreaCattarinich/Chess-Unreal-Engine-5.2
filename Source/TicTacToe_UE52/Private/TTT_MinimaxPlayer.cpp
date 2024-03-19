@@ -188,6 +188,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				{
 					Max_Eval = Current_Eval;
 					BestMove = FMove(
+						GameMode->Moves.Num() + 1,
 						CurrentTile->GetPiece()->GetPieceID(),
 						CurrentTile->GetGridPosition(),
 						Move,
@@ -239,6 +240,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 				{
 					Min_Eval = Current_Eval;
 					BestMove = FMove(
+						GameMode->Moves.Num() + 1,
 						CurrentTile->GetPiece()->GetPieceID(),
 						CurrentTile->GetGridPosition(),
 						Move,
@@ -309,6 +311,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32
 				{
 					Max_Eval = Current_Eval;
 					BestMove = FMove(
+						GameMode->Moves.Num() + 1,
 						CurrentTile->GetPiece()->GetPieceID(),
 						CurrentTile->GetGridPosition(),
 						Move,
@@ -368,6 +371,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32
 				{
 					Min_Eval = Current_Eval;
 					BestMove = FMove(
+						GameMode->Moves.Num() + 1,
 						CurrentTile->GetPiece()->GetPieceID(),
 						CurrentTile->GetGridPosition(),
 						Move,

@@ -5,7 +5,7 @@
 
 void UMoveWidget::SetData(const FMove& Move)
 {
-	MoveToGo = 1; // TODO: implementare sta roba (o variabile incrementale)
+	MoveToGo = Move.NumberMove; // TODO: implementare sta roba (o variabile incrementale)
 					// oppure aggiungere un membro a FMove che tiene conto della mossa
 
 	const FString StartAsString =	FString::Printf(TEXT("(%d,%d)"), int(Move.Start.X), int(Move.Start.Y));
@@ -26,7 +26,11 @@ void UMoveWidget::SetData(const FMove& Move)
 
 	StringMove += PositionToStringMove(Move.End);
 
-	Number->SetText(FText::FromString("1"));
+	FString MoveToGoString = FString::FromInt(MoveToGo);
+	MoveToGoString += ".";
+	Number->SetText(FText::FromString(MoveToGoString));
+
+
 	TextLabel->SetText(FText::FromString(StringMove));
 	Btn->OnClicked.AddDynamic(this, &UMoveWidget::OnBtnClick);
 }

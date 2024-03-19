@@ -174,7 +174,7 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 		// Aggiungo 1 alle mosse eseguite dopo la promozione
 		Piece->MovesSincePromotion++;
 	}
-	const FMove CurrentMove = FMove(IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
+	const FMove CurrentMove = FMove(Moves.Num() + 1, IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
 	Moves.Add(CurrentMove);
 
 	if(bIsGameMove)
@@ -425,9 +425,10 @@ bool ATTT_GameMode::IsWinMove()
 
 void ATTT_GameMode::UndoGesture(bool bIsGameMove)
 {
-	GField->ResetGameStatusField();
+
 	if (Moves.Num() > 0 && CurrentPlayer == 0)
 	{
+		GField->ResetGameStatusField();
 		UndoMove(bIsGameMove);
 
 		if (Moves.Num() > 0)

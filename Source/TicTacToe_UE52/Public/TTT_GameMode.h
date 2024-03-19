@@ -18,7 +18,8 @@ struct FMove
 {
 	GENERATED_BODY()
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Moves")
+		int32 NumberMove;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Moves")
 		int32 IDPiece;
@@ -43,12 +44,12 @@ struct FMove
 	}
 	*/
 	FMove()
-		: IDPiece(-1), Start(FVector2D(-1,-1)), End(FVector2D(-1,-1)), IDPieceEaten(-1)
+		: NumberMove(-1), IDPiece(-1), Start(FVector2D(-1,-1)), End(FVector2D(-1,-1)), IDPieceEaten(-1)
 	{
 	}
 
-	FMove(int32 _IDPiece, FVector2D _Start, FVector2D _End, int32 _IDPieceEaten)
-		: IDPiece(_IDPiece), Start(_Start), End(_End), IDPieceEaten(_IDPieceEaten)
+	FMove(int32 _NumberMove, int32 _IDPiece, FVector2D _Start, FVector2D _End, int32 _IDPieceEaten)
+		: NumberMove(_NumberMove), IDPiece(_IDPiece), Start(_Start), End(_End), IDPieceEaten(_IDPieceEaten)
 	{
 	}
 };
@@ -155,7 +156,9 @@ public:
 	bool IsWinMove();
 
 	// Revert status of game (2 moves backward)
+	UFUNCTION(BlueprintCallable)
 	void UndoGesture(bool bIsGameMove = false);
+	
 
 	/******** LIST OF MOVES **********/
 
