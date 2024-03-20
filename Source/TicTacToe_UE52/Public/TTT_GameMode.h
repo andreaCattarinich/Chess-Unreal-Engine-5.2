@@ -153,7 +153,7 @@ public:
 	void HandleUndoMoveForPawnsAndPromotion(FVector2D End, const bool bIsGameMove);
 
 	bool IsIllegalMove();
-	bool IsWinMove();
+	bool IsWinMove(const int32 Player);
 
 	// Revert status of game (2 moves backward)
 	UFUNCTION(BlueprintCallable)

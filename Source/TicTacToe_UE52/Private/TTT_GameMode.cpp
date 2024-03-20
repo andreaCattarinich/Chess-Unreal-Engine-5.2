@@ -181,7 +181,7 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 	{
 		MovesPanel->AddMoveToPanel(CurrentMove);
 		
-		if (!IsWinMove())
+		if (!IsWinMove(CurrentPlayer))
 		{
 			TurnNextPlayer();
 		}
@@ -389,11 +389,11 @@ bool ATTT_GameMode::IsIllegalMove()
 	return false;
 }
 
-bool ATTT_GameMode::IsWinMove()
+bool ATTT_GameMode::IsWinMove(const int32 Player)
 {
 	for(const auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == (CurrentPlayer ^ 1))
+		if(CurrentTile->GetOwner() == (Player ^ 1))
 		{
 			GField->SetSelectedTile(CurrentTile->GetGridPosition());
 

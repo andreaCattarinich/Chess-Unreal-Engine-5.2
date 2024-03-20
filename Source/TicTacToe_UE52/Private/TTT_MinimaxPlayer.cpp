@@ -422,7 +422,20 @@ int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) 
 	{
 		bIsMax = !bIsMax;
 	}
-	
+	if(bIsMax)
+	{
+		if(GameMode->IsWinMove(1))
+		{
+			return 10000;
+		}
+	}
+	else
+	{
+		if(GameMode->IsWinMove(0))
+		{
+			return -10000;	
+		}
+	}
 	if (bIsMax)
 	{
 		return BlackScore - WhiteScore;
