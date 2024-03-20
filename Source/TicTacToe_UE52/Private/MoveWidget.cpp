@@ -98,5 +98,23 @@ FString UMoveWidget::IntToLetter(int32 Value) const
 void UMoveWidget::OnBtnClick()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), MoveToGo);
+
+	int32 index;
+
+	// Se è una mossa nera
+	// => vado indietro fino alla mossa successiva bianca
+	if (MoveToGo % 2 == 0)
+	{
+		index = MoveToGo + 1;
+	}
+	else
+	{
+		index = MoveToGo;
+	}
+
+	while (GameMode->Moves.Num() > index)
+	{
+		GameMode->UndoMove(true);
+	}
 }
 

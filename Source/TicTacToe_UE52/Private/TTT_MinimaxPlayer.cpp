@@ -13,7 +13,7 @@ ATTT_MinimaxPlayer::ATTT_MinimaxPlayer()
 	GameInstance = Cast<UTTT_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	// Profondità di ricerca dell'albero di ricorsione delle mosse
-	STD_DEPTH = 3;
+	STD_DEPTH = 2;
 }
 
 // Called when the game starts or when spawned
