@@ -14,6 +14,7 @@ ATTT_MinimaxPlayer::ATTT_MinimaxPlayer()
 
 	// Profondità di ricerca dell'albero di ricorsione delle mosse
 	STD_DEPTH = 3;
+	
 }
 
 // Called when the game starts or when spawned
