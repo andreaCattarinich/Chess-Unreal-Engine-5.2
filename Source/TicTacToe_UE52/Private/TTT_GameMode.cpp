@@ -77,6 +77,7 @@ void ATTT_GameMode::BeginPlay()
 	{
 		MovesPanel->AddToViewport(0);		
 	}
+
 	ChoosePlayerAndStartGame();
 }
 
@@ -332,8 +333,23 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 	// - Ricordare gli include
 
 	// GENERA LA REGINA
+	if (bIsGameMove)
+	{
+		Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
+
+		if (Promotion)
+		{
+			Promotion->AddToViewport(1);
+		}
+	}
+	else
+	{
+		// FARE QUALCOSA PER IL NERO
+	}
+
 	GField->GeneratePiece<AQueen>(Position, Player);
 	(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
+
 }
 
 void ATTT_GameMode::HandleUndoMoveForPawnsAndPromotion(FVector2D End, const bool bIsGameMove)

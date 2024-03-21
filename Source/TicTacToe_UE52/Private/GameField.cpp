@@ -47,9 +47,9 @@ void AGameField::BeginPlay()
 
 
 	GenerateField();
-	GeneratePieces();
+	//GeneratePieces();
 	
-	//GeneratePiecesForMinimaxTest();
+	GeneratePiecesForMinimaxTest();
 	//GeneratePiecesForPromotion();
 	//GeneratePiecesForPromotion2();
 }
@@ -231,6 +231,7 @@ void AGameField::GeneratePiecesForMinimaxTest()
 
 	// BLACK
 	GeneratePiece<ABishop>(FVector2D(0, 1), 1);
+	GeneratePiece<APawns>(FVector2D(5, 5), 0);
 
 }
 

@@ -102,11 +102,21 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		AGameField* GField;
 
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UMovesPanel> WidgetClass;
 
 	UPROPERTY(VisibleAnywhere)
 	UMovesPanel* MovesPanel;
+
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UUserWidget> PromotionClass;
+
+	UPROPERTY(VisibleAnywhere)
+		UUserWidget* Promotion;
+
+
 	// ************ SETTERS ************
 	// Esegue tutte le operazioni sulla GameField per selezionare la Tile
 	// cliccata dallo Human Player (oppure la Tile cliccata dal
