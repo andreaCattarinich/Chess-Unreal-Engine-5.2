@@ -137,9 +137,9 @@ FString ATile::GameStatusToString() const
 	switch (TileGameStatus)
 	{
 	case ETileGameStatus::FREE:			return FString("FREE");
-	case ETileGameStatus::SELECTED:		return FString("SELECTED");
-	case ETileGameStatus::LEGAL_MOVE:	return FString("LEGAL_MOVE");
-	case ETileGameStatus::CAN_CAPTURE:	return FString("CAN_CAPTURE");
+	case ETileGameStatus::SELECTED:		return FString("SELECTED2");
+	case ETileGameStatus::LEGAL_MOVE:	return FString("LEGAL_MOVE2");
+	case ETileGameStatus::CAN_CAPTURE:	return FString("CAN_CAPTURE2");
 	default: return FString("Unknown");
 	}
 }

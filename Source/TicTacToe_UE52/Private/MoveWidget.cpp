@@ -101,7 +101,7 @@ void UMoveWidget::OnBtnClick()
 
 	int32 index;
 
-	// Se Ã¨ una mossa nera
+	// Se è una mossa nera
 	// => vado indietro fino alla mossa successiva bianca
 	if (MoveToGo % 2 == 0)
 	{
@@ -114,7 +114,6 @@ void UMoveWidget::OnBtnClick()
 
 	while (GameMode->Moves.Num() > index)
 	{
-		GameMode->GField->ResetGameStatusField();
 		GameMode->UndoMove(true);
 	}
 }
