@@ -23,7 +23,7 @@ AGameField::AGameField()
 	TileSize = 120;					// Tile dimension
 	CellPadding = 0;				// Tile padding dimension
 	NormalizedCellPadding = 0.0f;
-	PieceScalePercentage = 80;
+	PieceScalePercentage = 100;
 }
 
 void AGameField::OnConstruction(const FTransform& Transform)
