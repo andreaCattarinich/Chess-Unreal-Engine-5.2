@@ -6,4 +6,6 @@
 void UPromotion::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+
 }

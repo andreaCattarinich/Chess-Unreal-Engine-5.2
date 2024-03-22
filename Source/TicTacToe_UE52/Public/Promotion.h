@@ -10,7 +10,6 @@ UCLASS(Abstract)
 class UPromotion : public UUserWidget
 {
 	GENERATED_BODY()
-
 protected:
 	virtual void NativeConstruct() override;
 };

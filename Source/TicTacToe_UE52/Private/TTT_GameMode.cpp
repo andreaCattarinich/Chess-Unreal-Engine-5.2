@@ -14,8 +14,10 @@
 #include "TTT_MinimaxPlayer.h"
 
 #include "MovesPanel.h"
+#include "Promotion.h"
 
 #include "EngineUtils.h"
+
 
 ATTT_GameMode::ATTT_GameMode()
 {
@@ -331,16 +333,19 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 
 	// TODO: aggiungere la possibilità di scelta tra Knight, Bishop, Rook, Queen
 	// - Ricordare gli include
-	/*
+	
 	// GENERA LA REGINA
 	if (bIsGameMove)
 	{
+		/*
 		Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
 
 		if (Promotion)
 		{
 			Promotion->AddToViewport(1);
+
 		}
+		*/
 	}
 	else
 	{
@@ -348,7 +353,7 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 	}
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("TEST COMMIT"));
-	*/
+	
 	GField->GeneratePiece<AQueen>(Position, Player);
 	(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
 
