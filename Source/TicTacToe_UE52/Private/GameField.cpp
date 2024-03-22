@@ -47,9 +47,9 @@ void AGameField::BeginPlay()
 
 
 	GenerateField();
-	//GeneratePieces();
+	GeneratePieces();
 	
-	GeneratePiecesForMinimaxTest();
+	//GeneratePiecesForMinimaxTest();
 	//GeneratePiecesForPromotion();
 	//GeneratePiecesForPromotion2();
 }
