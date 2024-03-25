@@ -146,13 +146,6 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 		/*** CHANGE LOCATION ***/
 		SetPieceLocation(EndPosition);
 		GField->ResetGameStatusField();
-
-		/*
-		TODO: SCEGLIERE SE STAMPARLO O NO
-		(CurrentPlayer) 
-			? GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("AI made the move"))
-			: GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Player made the move"));
-		*/
 	}
 
 	// Se il pezzo mosso è una pedina
@@ -160,14 +153,6 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 	{
 		// Gestisco la promozione
 		HandlePawnPromotionIfExists(EndPosition, bIsGameMove);
-		
-		/* TODO: aggiungere un timer di mezzo secondo
-		FTimerHandle TimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this, EndPosition, bIsGameMove]()
-			{
-				HandlePawnPromotionIfExists(EndPosition, bIsGameMove);
-			}, 0.5f, false);
-		*/
 	}
 
 	// Se il pezzo che ho mosso era un pezzo già promosso
@@ -177,6 +162,7 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 		// Aggiungo 1 alle mosse eseguite dopo la promozione
 		Piece->MovesSincePromotion++;
 	}
+
 	const FMove CurrentMove = FMove(Moves.Num() + 1, IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
 	Moves.Add(CurrentMove);
 
@@ -236,7 +222,7 @@ void ATTT_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D End)
 	Piece->SetGridPosition(End.X, End.Y);
 	
 	StartTile->SetTileStatus(-1, ETileStatus::EMPTY, nullptr);
-	//StartTile->SetTileStatus(-1, ETileStatus::EMPTY, nullptr);
+	
 	(*GField->TileMap.Find(End))->SetTileStatus(StartOwner, ETileStatus::OCCUPIED, Piece);
 }
 
@@ -330,32 +316,64 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 
 	PawnPromoted->SetActorHiddenInGame(true);
 	PawnPromoted->SetActorEnableCollision(false);
-
-	// TODO: aggiungere la possibilità di scelta tra Knight, Bishop, Rook, Queen
-	// - Ricordare gli include
 	
 	// GENERA LA REGINA
 	if (bIsGameMove)
 	{
-		/*
-		Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
-
-		if (Promotion)
+		/* TODO: Queste righe di codice commentate creano il widget per la scelta della pedina da promuovere
+		* Dopodiché la funzione che genera effettivamente la pedina promossa è delegata al click di uno dei 4 bottoni
+		* Attraverso la funzione SetPromotionChoice viene effettivamente spawnato il pezzo.
+		if (Player == 0)
 		{
-			Promotion->AddToViewport(1);
+			Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
+
+			if (Promotion)
+			{
+				Promotion->AddToViewport(1);
+				UGameplayStatics::SetGamePaused(GetWorld(), true);  // Metti in pausa il gioco
+			}
+
+			CurrentPositionForPromotion = Position;
+			CurrentPlayerForPromotion = Player;
+
 
 		}
+		else
+		{
+			GField->GeneratePiece<AQueen>(Position, Player);
+			(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
+		}
 		*/
+
+		GField->GeneratePiece<AQueen>(Position, Player);
+		(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
+
 	}
 	else
 	{
-		// FARE QUALCOSA PER IL NERO
+
+		GField->GeneratePiece<AQueen>(Position, Player);
+		(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
+	}
+}
+
+void ATTT_GameMode::SetPromotionChoice(int32 Choice)
+{
+	bIsChoosing = Choice;
+
+	if (Promotion)
+	{
+		Promotion->RemoveFromViewport();
+		UGameplayStatics::SetGamePaused(GetWorld(), false);  // Riprendi il gioco
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("TEST COMMIT"));
-	
-	GField->GeneratePiece<AQueen>(Position, Player);
-	(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
+	switch (bIsChoosing)
+	{
+	case 1:
+		GField->GeneratePiece<AQueen>(CurrentPositionForPromotion, CurrentPlayerForPromotion);
+		(*GField->TileMap.Find(CurrentPositionForPromotion))->GetPiece()->SetIsPromoted(true);
+		break;
+	}
 
 }
 

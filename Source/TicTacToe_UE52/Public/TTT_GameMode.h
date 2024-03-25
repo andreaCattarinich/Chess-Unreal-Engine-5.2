@@ -116,6 +116,16 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UUserWidget* Promotion;
 
+	UPROPERTY(VisibleAnywhere)
+		int32 bIsChoosing; // 0 sceglie, 1 queen, 2 ...
+
+
+	UPROPERTY(VisibleAnywhere)
+		FVector2D CurrentPositionForPromotion; // 0 sceglie, 1 queen, 2 ...
+
+	UPROPERTY(VisibleAnywhere)
+		int32 CurrentPlayerForPromotion; // 0 sceglie, 1 queen, 2 ...
+
 
 	// ************ SETTERS ************
 	// Esegue tutte le operazioni sulla GameField per selezionare la Tile
@@ -169,6 +179,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UndoGesture(bool bIsGameMove = false);
 	
+	void SetPromotionChoice(int32 Choice);
 
 	/******** LIST OF MOVES **********/
 

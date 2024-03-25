@@ -34,13 +34,4 @@ protected:
 public:
 	void AddMoveToPanel(const FMove& Move);
 	void PopFromPanel();
-	
-protected:
-
-	/****************************/
-	void GenerateRandom();
-
-
-	UFUNCTION()
-	void OnGenerateButtonClicked();
 };

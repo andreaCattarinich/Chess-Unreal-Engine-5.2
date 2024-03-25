@@ -10,28 +10,6 @@ void UMovesPanel::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	// Here is where I typically bind delegates, and set up default appearance
-	/*
-	if (TitleLabel)
-	{
-		TitleLabel->SetText(FText::FromString(TEXT("Analysis of Moves")));
-	}
-
-	GenerateRandom();
-
-	GenerateButton->OnClicked.AddUniqueDynamic(this, &UMovesPanel::OnGenerateButtonClicked);
-	*/
-
-	
-	/*
-	if(MoveWidgetRef)
-	{
-		UUserWidget* widget = CreateWidget(this, MoveWidgetRef);
-		VerticalBox->AddChildToVerticalBox(widget);
-		UMoveWidget* move = Cast<UMoveWidget>(widget);
-		move->SetData(0);
-	}
-	*/
 }
 
 void UMovesPanel::AddMoveToPanel(const FMove& Move)
@@ -54,16 +32,4 @@ void UMovesPanel::PopFromPanel()
 		VerticalBox->RemoveChildAt(VerticalBox->GetChildrenCount()-1);
 		//LastChild->RemoveFromParent();
 	}
-}
-
-void UMovesPanel::GenerateRandom()
-{
-	const int32 RandomNumber = FMath::RandRange(0,100);
-
-	//TitleLabel->SetText(FText::AsNumber(RandomNumber));
-}
-
-void UMovesPanel::OnGenerateButtonClicked()
-{
-	GenerateRandom();
 }
