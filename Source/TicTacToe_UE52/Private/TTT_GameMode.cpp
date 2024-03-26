@@ -30,6 +30,10 @@ ATTT_GameMode::ATTT_GameMode()
 	MoveCounter = -1;
 	GField = nullptr;
 	MovesPanel = nullptr;
+	Promotion = nullptr;
+	CurrentPlayerForPromotion = -1;
+	bIsChoosing = false;
+	
 }
 
 void ATTT_GameMode::BeginPlay()
@@ -55,6 +59,7 @@ void ATTT_GameMode::BeginPlay()
 
 	const float CameraPosX = ((GField->TileSize * (FieldSize + ((FieldSize - 1) * GField->NormalizedCellPadding) - (FieldSize - 1))) / 2) - (GField->TileSize / 2);
 	const FVector CameraPos(CameraPosX, CameraPosX, 1500.0f);
+
 	HumanPlayer->SetActorLocationAndRotation(CameraPos, FRotationMatrix::MakeFromX(FVector(0, 0, -1)).Rotator());
 
 	// Human player = 0
@@ -62,11 +67,11 @@ void ATTT_GameMode::BeginPlay()
 	PlayerNames.Add(0, "Player");
 
 	// Random Player
-	//auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
+	auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
 	//PlayerNames.Add(1, "AI");
 
 	// MiniMax Player
-	auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
+	//auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
 
 	// AI player = 1
 	Players.Add(AI);
@@ -154,7 +159,7 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 		// Gestisco la promozione
 		HandlePawnPromotionIfExists(EndPosition, bIsGameMove);
 	}
-
+	
 	// Se il pezzo che ho mosso era un pezzo già promosso
 	APiece* Piece = (*GField->TileMap.Find(EndPosition))->GetPiece();
 	if (Piece->IsPromoted())
@@ -320,9 +325,10 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 	// GENERA LA REGINA
 	if (bIsGameMove)
 	{
-		/* TODO: Queste righe di codice commentate creano il widget per la scelta della pedina da promuovere
-		* Dopodiché la funzione che genera effettivamente la pedina promossa è delegata al click di uno dei 4 bottoni
-		* Attraverso la funzione SetPromotionChoice viene effettivamente spawnato il pezzo.
+		// TODO: Queste righe di codice  creano il widget per la scelta della pedina da promuovere
+		// Dopodiché la funzione che genera effettivamente la pedina promossa è delegata al click di uno dei 4 bottoni
+		// Attraverso la funzione SetPromotionChoice viene effettivamente spawnato il pezzo.
+		
 		if (Player == 0)
 		{
 			Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
@@ -335,44 +341,54 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 
 			CurrentPositionForPromotion = Position;
 			CurrentPlayerForPromotion = Player;
-
-
 		}
 		else
 		{
 			GField->GeneratePiece<AQueen>(Position, Player);
 			(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
 		}
-		*/
-
-		GField->GeneratePiece<AQueen>(Position, Player);
-		(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
-
+		
 	}
 	else
 	{
-
 		GField->GeneratePiece<AQueen>(Position, Player);
 		(*GField->TileMap.Find(Position))->GetPiece()->SetIsPromoted(true);
 	}
 }
 
-void ATTT_GameMode::SetPromotionChoice(int32 Choice)
+void ATTT_GameMode::SetPromotionChoice(EPieceType PromotionType)
 {
-	bIsChoosing = Choice;
-
 	if (Promotion)
 	{
-		Promotion->RemoveFromViewport();
-		UGameplayStatics::SetGamePaused(GetWorld(), false);  // Riprendi il gioco
+		//Promotion->RemoveFromViewport();
+		Promotion->RemoveFromParent();
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
 	
-	switch (bIsChoosing)
+	switch (PromotionType)
 	{
-	case 1:
+	case EPieceType::QUEEN:
 		GField->GeneratePiece<AQueen>(CurrentPositionForPromotion, CurrentPlayerForPromotion);
-		(*GField->TileMap.Find(CurrentPositionForPromotion))->GetPiece()->SetIsPromoted(true);
 		break;
+	case EPieceType::BISHOP:
+		GField->GeneratePiece<ABishop>(CurrentPositionForPromotion, CurrentPlayerForPromotion);
+		break;
+	case EPieceType::KNIGHT:
+		GField->GeneratePiece<AKnight>(CurrentPositionForPromotion, CurrentPlayerForPromotion);
+		break;
+	case EPieceType::ROOK:
+		GField->GeneratePiece<ARook>(CurrentPositionForPromotion, CurrentPlayerForPromotion);
+		break;
+	default: ;
+	}
+	
+	(*GField->TileMap.Find(CurrentPositionForPromotion))->GetPiece()->SetIsPromoted(true);
+	
+	APiece* Piece = (*GField->TileMap.Find(CurrentPositionForPromotion))->GetPiece();
+	if (Piece->IsPromoted())
+	{
+		// Aggiungo 1 alle mosse eseguite dopo la promozione
+		Piece->MovesSincePromotion++;
 	}
 
 }

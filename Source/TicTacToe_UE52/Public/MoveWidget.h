@@ -26,7 +26,7 @@ public:
 	UPROPERTY(meta =(BindWidget))
 	UTextBlock* TextLabel;
 
-	int MoveToGo;
+	int NumberMove;
 
 	void SetData(const FMove& Move);
 

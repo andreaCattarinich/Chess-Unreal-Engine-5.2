@@ -179,7 +179,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UndoGesture(bool bIsGameMove = false);
 	
-	void SetPromotionChoice(int32 Choice);
+	void SetPromotionChoice(EPieceType PromotionType);
 
 	/******** LIST OF MOVES **********/
 

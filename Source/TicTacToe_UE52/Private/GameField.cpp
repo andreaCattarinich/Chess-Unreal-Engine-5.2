@@ -47,9 +47,9 @@ void AGameField::BeginPlay()
 
 
 	GenerateField();
-	//GeneratePieces();
+	GeneratePieces();
 	
-	GeneratePiecesForMinimaxTest();
+	//GeneratePiecesForMinimaxTest();
 	//GeneratePiecesForPromotion();
 	//GeneratePiecesForPromotion2();
 }
@@ -113,7 +113,7 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 }
 
 // TODO: implementare
-FVector2D AGameField::GetKingPosition(int32 Player) const
+FVector2D AGameField::GetKingPosition(const int32 Player) const
 {
 	// TODO: NUOVA IMPLEMENTAZIONE!!!!
 	for (auto& CurrentTile : TileArray)
@@ -127,41 +127,6 @@ FVector2D AGameField::GetKingPosition(int32 Player) const
 		}
 	}
 	return FVector2D(-1, -1);
-
-	/*
-	// TODO: sostituire la nuova implementazione
-	// Usare attributo KingPositions in GameField
-	// (Prima bisogna settare la posizione del RE)
-	if (Player == 0)
-	{
-		for (auto& PieceEntry : PieceMap)
-		{
-			APiece* Piece = PieceEntry.Value;
-
-			if (Piece && Piece->PieceType == EPieceType::KING && Piece->GetOwner() == 0)
-			{
-				return PieceEntry.Key;
-			}
-		}
-	}
-	else
-	{
-		for (auto& PieceEntry : PieceMap)
-		{
-			APiece* Piece = PieceEntry.Value;
-
-			if (Piece && Piece->PieceType == EPieceType::KING && Piece->GetOwner() == 1)
-			{
-
-				return PieceEntry.Key;
-			}
-		}
-
-	}
-	*/
-	// TODO:
-	// ERRORE
-	//return FVector2D(-1, -1);
 }
 
 
@@ -228,10 +193,13 @@ void AGameField::GeneratePiecesForMinimaxTest()
 	GeneratePiece<ARook>(FVector2D(2, 1), 0);
 	GeneratePiece<AKnight>(FVector2D(1, 0), 0);
 	GeneratePiece<ABishop>(FVector2D(1, 2), 0);
-
+	GeneratePiece<APawns>(FVector2D(5, 5), 0);
+	GeneratePiece<AKing>(FVector2D(1, 1), 0);
+	
 	// BLACK
 	GeneratePiece<ABishop>(FVector2D(0, 1), 1);
-	GeneratePiece<APawns>(FVector2D(5, 5), 0);
+	GeneratePiece<APawns>(FVector2D(1, 6), 1);
+	GeneratePiece<AKing>(FVector2D(0, 7), 1);
 
 }
 
@@ -292,18 +260,17 @@ void AGameField::GeneratePiece(FVector2D Position, int32 PlayerOwner)
 
 	const float PieceScale = (TileSize / 100) * (PieceScalePercentage / 100);
 
-	SpawnedPiece->SetPieceID();
-	SpawnedPiece->SetGridPosition(Position.X, Position.Y);
-	SpawnedPiece->SetActorScale3D(FVector(PieceScale, PieceScale, 0.5));
-	SpawnedPiece->SetPlayerOwner(PlayerOwner);
-	SpawnedPiece->SetTexture();
+	if(SpawnedPiece)
+	{
+		SpawnedPiece->SetPieceID();
+		SpawnedPiece->SetGridPosition(Position.X, Position.Y);
+		SpawnedPiece->SetActorScale3D(FVector(PieceScale, PieceScale, 0.5));
+		SpawnedPiece->SetPlayerOwner(PlayerOwner);
+		SpawnedPiece->SetTexture();
 	
-	PieceMap.Add(SpawnedPiece->GetPieceID(), SpawnedPiece);
-	(*TileMap.Find(Position))->SetTileStatus(PlayerOwner, ETileStatus::OCCUPIED, SpawnedPiece);
-
-	// TODO: togliere
-	//ATile* CurrentTile = *TileMap.Find(Position);
-	//CurrentTile->SetTileStatus(PlayerOwner, ETileStatus::OCCUPIED, SpawnedPiece);
+		PieceMap.Add(SpawnedPiece->GetPieceID(), SpawnedPiece);
+		(*TileMap.Find(Position))->SetTileStatus(PlayerOwner, ETileStatus::OCCUPIED, SpawnedPiece);	
+	}
 }
 
 inline bool AGameField::IsValidPosition(const FVector2D Position) const
@@ -336,11 +303,11 @@ void AGameField::ResetGameStatusField()
 	SetSelectedTile(FVector2D(-1, -1));
 }
 
-TArray<FVector2D> AGameField::LegalMoves(FVector2D Position) const
+TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 {
 
 	// If the tile passed as an argument does not belong (non appartiene) to any player
-	if((*TileMap.Find(Position))->GetOwner() == NOT_ASSIGNED)
+	if(!IsValidPosition(Position) || (*TileMap.Find(Position))->GetOwner() == NOT_ASSIGNED)
 	{
 		return TArray<FVector2D>();
 	}

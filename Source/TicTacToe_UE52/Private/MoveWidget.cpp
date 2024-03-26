@@ -5,37 +5,155 @@
 
 void UMoveWidget::SetData(const FMove& Move)
 {
-	MoveToGo = Move.NumberMove; // TODO: implementare sta roba (o variabile incrementale)
-					// oppure aggiungere un membro a FMove che tiene conto della mossa
-
-	const FString StartAsString =	FString::Printf(TEXT("(%d,%d)"), int(Move.Start.X), int(Move.Start.Y));
-	const FString EndAsString   =	FString::Printf(TEXT("(%d,%d)"), int(Move.End.X), int(Move.End.Y));
+	NumberMove = Move.NumberMove;
 	
 	GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
 
-	APiece* StartPiece = *GameMode->GField->PieceMap.Find(Move.IDPiece);
+	const APiece* StartPiece = *GameMode->GField->PieceMap.Find(Move.IDPiece);
 	
 	FString StringMove = "";
 	FString Name = TypeToChar(StartPiece->GetPieceType());
-	
 	StringMove += Name;
+
+	EPieceType PieceTypes[] = { EPieceType::ROOK, EPieceType::KNIGHT, EPieceType::BISHOP };
+
+	for (const EPieceType& CurrentPieceType : PieceTypes)
+	{
+	    if (StartPiece->GetPieceType() == CurrentPieceType)
+	    {
+	        const APiece* OtherPiece = nullptr;
+	        for (const auto& CurrentTile : GameMode->GField->TileArray)
+	        {
+	            const APiece* CurrentPiece = CurrentTile->GetPiece();
+	            const int32 CurrOwner = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
+	            
+	            if (CurrentTile->GetOwner() == CurrOwner &&
+	                CurrentPiece->GetPieceType() == CurrentPieceType &&
+	                CurrentPiece->GetPieceID() != Move.IDPiece)
+	            {
+	                OtherPiece = CurrentPiece;
+	                break;
+	            }
+	        }
+	        
+	        if (OtherPiece)
+	        {
+	            const FMove LastMove = GameMode->Moves.Pop();
+	            GameMode->Moves.Add(LastMove);
+	            
+	            GameMode->UndoMove();
+	            
+	            GameMode->GField->SetSelectedTile(OtherPiece->GetGridPosition());
+	            const TArray<FVector2d> LegalMovesOfOtherPiece = GameMode->GField->LegalMoves(OtherPiece->GetGridPosition());
+	            //GameMode->GField->ResetGameStatusField();
+
+	            GameMode->GField->SetSelectedTile(LastMove.Start);
+	            GameMode->DoMove(LastMove.End);
+	           //GameMode->GField->ResetGameStatusField();
+
+	            if (LegalMovesOfOtherPiece.Contains(Move.End))
+	            {
+	                if (Move.Start.Y == OtherPiece->GetGridPosition().Y)
+	                {
+	                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CASO SPECIALE 2"));
+	                    StringMove += FString::FromInt(Move.Start.X + 1);
+	                }
+	                else
+	                {
+	                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CASO SPECIALE 1"));
+	                    StringMove += IntToLetter(static_cast<int>(Move.Start.Y));	
+	                }
+	            }
+	        }
+	        break;
+	    }
+	}
+	
 	if (Move.IDPieceEaten != -1)
 	{
-		StringMove += "x";
+		if(StartPiece->GetPieceType() == EPieceType::PAWN)
+		{
+			StringMove += IntToLetter(static_cast<int>(Move.Start.Y));
+			StringMove += "x";
+		}
+		else
+		{
+			StringMove += "x";
+		}
 	}
 
 	StringMove += PositionToStringMove(Move.End);
+	/*
+	int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
 
-	FString MoveToGoString = FString::FromInt(MoveToGo);
-	MoveToGoString += ".";
-	Number->SetText(FText::FromString(MoveToGoString));
+	if(GameMode->IsWinMove(Player))
+	{
+		StringMove += "#";
+	}
+	*/
+	bool bIsPatta = true;
+	const int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
+	for(const auto& CurrentTile : GameMode->GField->TileArray)
+	{
+		if(CurrentTile->GetOwner() == Player)
+		{
+			GameMode->GField->SetSelectedTile(CurrentTile->GetGridPosition());
+
+			TArray<FVector2D> CurrentLegalMoves;
+			
+			//GameMode->CurrentPlayer = GameMode->GetNextPlayer(GameMode->CurrentPlayer);
+			CurrentLegalMoves = GameMode->GField->LegalMoves(CurrentTile->GetGridPosition());
+			//GameMode->CurrentPlayer = GameMode->GetNextPlayer(GameMode->CurrentPlayer);
+			
+			if(CurrentLegalMoves.Contains(GameMode->GField->GetKingPosition((GameMode->GetNextPlayer(GameMode->CurrentPlayer)))))
+			{
+				
+				if(GameMode->IsWinMove(Player))
+				{
+					bIsPatta = false;
+					StringMove += "#";
+					if(Player == 0)
+					{
+						StringMove += " 1-0";
+					}
+					else
+					{
+						StringMove += " 0-1";
+					}
+				}
+				else
+				{
+					StringMove += "+";
+				}
+			}
+		}
+	}
+
+	if(GameMode->IsWinMove(Player) && bIsPatta)
+	{
+		StringMove += " 1/2-1/2";
+	}
+
+
+
+
+	
+	
+	FString NumberMoveString = "";
+	if(NumberMove % 2 == 1)
+	{
+		NumberMoveString = FString::FromInt(ceil(static_cast<float>(NumberMove)/2));
+		NumberMoveString += ".";
+	}
+	
+	Number->SetText(FText::FromString(NumberMoveString));
 
 
 	TextLabel->SetText(FText::FromString(StringMove));
 	Btn->OnClicked.AddDynamic(this, &UMoveWidget::OnBtnClick);
 }
 
-FString UMoveWidget::TypeToChar(EPieceType Type) const
+FString UMoveWidget::TypeToChar(const EPieceType Type) const
 {
 	switch (Type)
 	{
@@ -59,7 +177,7 @@ FString UMoveWidget::PositionToStringMove(FVector2D Position) const
 
 }
 
-FString UMoveWidget::IntToLetter(int32 Value) const
+FString UMoveWidget::IntToLetter(const int32 Value) const
 {
 	FString Letter;
 	switch (Value)
@@ -97,19 +215,19 @@ FString UMoveWidget::IntToLetter(int32 Value) const
 
 void UMoveWidget::OnBtnClick()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), MoveToGo);
+	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), NumberMove);
 
 	int32 index;
 
 	// Se è una mossa nera
 	// => vado indietro fino alla mossa successiva bianca
-	if (MoveToGo % 2 == 0)
+	if (NumberMove % 2 == 0)
 	{
-		index = MoveToGo + 1;
+		index = NumberMove + 1;
 	}
 	else
 	{
-		index = MoveToGo;
+		index = NumberMove;
 	}
 
 	while (GameMode->Moves.Num() > index)
