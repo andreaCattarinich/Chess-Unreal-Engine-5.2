@@ -71,8 +71,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Property")
 		APiece* Piece;
 
-
+	
 public:
+	UPROPERTY(VisibleAnywhere)
+	class UTextRenderComponent* TileTextNumber;
+	
+	UPROPERTY(VisibleAnywhere)
+	class UTextRenderComponent* TileTextLetter;
 	// ************ SETTERS ************	
 	// Set the player owner and the status of a tile
 	void SetTileStatus(

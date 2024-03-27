@@ -2,6 +2,7 @@
 
 
 #include "Tile.h"
+#include "Components/TextRenderComponent.h"
 
 // Sets default values for this actor's properties
 ATile::ATile()
@@ -12,7 +13,13 @@ ATile::ATile()
 	// template function that creates a components
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+
+	TileTextNumber = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TileTextNumber"));
+	TileTextNumber->SetupAttachment(RootComponent);
 	
+	TileTextLetter = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TileTextLetter"));
+	TileTextLetter->SetupAttachment(RootComponent);
+
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);

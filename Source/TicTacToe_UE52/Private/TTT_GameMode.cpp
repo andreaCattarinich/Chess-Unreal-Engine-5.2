@@ -67,11 +67,11 @@ void ATTT_GameMode::BeginPlay()
 	PlayerNames.Add(0, "Player");
 
 	// Random Player
-	auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
+	//auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
 	//PlayerNames.Add(1, "AI");
 
 	// MiniMax Player
-	//auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
+	auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
 
 	// AI player = 1
 	Players.Add(AI);
