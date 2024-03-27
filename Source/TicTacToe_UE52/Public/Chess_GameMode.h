@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "TTT_GameMode.generated.h"
+#include "Chess_GameMode.generated.h"
 
 class AActor;
 
@@ -55,13 +55,13 @@ struct FMove
 };
 
 UCLASS()
-class TICTACTOE_UE52_API ATTT_GameMode : public AGameModeBase
+class TICTACTOE_UE52_API AChess_GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
 	// ************ CONSTRUCTORS ************
-	ATTT_GameMode();
+	AChess_GameMode();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

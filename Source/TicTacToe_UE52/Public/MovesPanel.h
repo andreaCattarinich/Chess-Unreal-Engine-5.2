@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 #include "Blueprint/UserWidget.h"
 
 #include "Components/VerticalBox.h"
 #include "Components/ScrollBox.h"
 #include "MovesPanel.generated.h"
 
-//class ATTT_GameMode;
+//class AChess_GameMode;
 
 
 UCLASS(Abstract)

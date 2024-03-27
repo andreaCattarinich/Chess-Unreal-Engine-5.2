@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 
 
 #include "Chess_GameInstance.h"
@@ -68,19 +68,19 @@ public:
 
 	// Manages Click on Tile
 	void HandleTileClick(
-		ATTT_GameMode* GameMode,
+		AChess_GameMode* GameMode,
 		ATile* ClickedTile
 	);
 
 	// Manages Click on Piece
 	void HandlePieceClick(
-		ATTT_GameMode* GameMode,
+		AChess_GameMode* GameMode,
 		APiece* ClickedPiece
 	);
 
 
 	void ExecuteTheMoveForHumanPlayer(
-		ATTT_GameMode* GameMode,
+		AChess_GameMode* GameMode,
 		ATile* EndTile
 		);
 

@@ -15,7 +15,7 @@ void AChess_RandomPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame

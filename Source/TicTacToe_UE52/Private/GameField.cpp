@@ -11,7 +11,7 @@
 #include "Bishop.h"
 #include "King.h"
 #include "Queen.h"
-#include "TTT_GameMode.h"
+#include "..\Public\Chess_GameMode.h"
 #include "Components/TextRenderComponent.h"
 
 // Sets default values
@@ -356,7 +356,7 @@ TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 	TArray<FVector2D> PossibleMovesOfPiece = PossibleMoves(Position);
 
 	// We must delete illegal moves
-	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	for (int32 index = PossibleMovesOfPiece.Num() - 1; index >= 0; --index)
 	{
@@ -383,7 +383,7 @@ TArray<FVector2D> AGameField::PossibleMoves(FVector2D Position) const
 
 void AGameField::ShowLegalMovesInTheField()
 {
-	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	for (const FVector2D& Position : LegalMovesArray)
 	{
@@ -423,13 +423,13 @@ void AGameField::ResetField()
 	
 	
 
-	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 	GameMode->IsGameOver = false;
 	GameMode->MoveCounter = 0;
 	GameMode->ChoosePlayerAndStartGame();
 	*/
 	
 
-	//ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	//AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 	//GameMode->UndoGesture(true);
 }

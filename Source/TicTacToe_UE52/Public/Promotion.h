@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"

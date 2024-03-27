@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Piece.h" // TODO: da togliere ma controllare inclusione di TTT_GameMode
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 
 #include "CoreMinimal.h"
 #include "Chess_PlayerInterface.h"
@@ -65,7 +65,7 @@ public:
 	int32 STD_DEPTH;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ATTT_GameMode* GameMode;
+	AChess_GameMode* GameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	mutable int32 NodesVisited;

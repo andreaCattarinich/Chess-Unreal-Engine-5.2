@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TTT_GameMode.h"
+#include "..\Public\Chess_GameMode.h"
 
 #include "Queen.h"
 #include "Rook.h"
@@ -19,7 +19,7 @@
 #include "EngineUtils.h"
 
 
-ATTT_GameMode::ATTT_GameMode()
+AChess_GameMode::AChess_GameMode()
 {
 	PlayerControllerClass = AChess_PlayerController::StaticClass();
 	DefaultPawnClass = AChess_HumanPlayer::StaticClass();
@@ -36,7 +36,7 @@ ATTT_GameMode::ATTT_GameMode()
 	
 }
 
-void ATTT_GameMode::BeginPlay()
+void AChess_GameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -95,7 +95,7 @@ void ATTT_GameMode::BeginPlay()
 	ChoosePlayerAndStartGame();
 }
 
-void ATTT_GameMode::SetSelectedTile(const FVector2D Position) const
+void AChess_GameMode::SetSelectedTile(const FVector2D Position) const
 {
 	// Reset dei colori del campo
 	GField->ResetGameStatusField();
@@ -110,7 +110,7 @@ void ATTT_GameMode::SetSelectedTile(const FVector2D Position) const
 	GField->ShowLegalMovesInTheField();
 }
 
-int32 ATTT_GameMode::GetNextPlayer(int32 Player) const
+int32 AChess_GameMode::GetNextPlayer(int32 Player) const
 {
 	Player++;
 	if (!Players.IsValidIndex(Player))
@@ -120,12 +120,12 @@ int32 ATTT_GameMode::GetNextPlayer(int32 Player) const
 	return Player;
 }
 
-AGameField* ATTT_GameMode::GetGameField() const
+AGameField* AChess_GameMode::GetGameField() const
 {
 	return GField;
 }
 
-void ATTT_GameMode::ChoosePlayerAndStartGame()
+void AChess_GameMode::ChoosePlayerAndStartGame()
 {
 	// The game starts with Human Player
 	CurrentPlayer = 0;
@@ -138,14 +138,14 @@ void ATTT_GameMode::ChoosePlayerAndStartGame()
 	Players[CurrentPlayer]->OnTurn();
 }
 
-void ATTT_GameMode::TurnNextPlayer()
+void AChess_GameMode::TurnNextPlayer()
 {
 	MoveCounter += 1;
 	CurrentPlayer = GetNextPlayer(CurrentPlayer);
 	Players[CurrentPlayer]->OnTurn();
 }
 
-void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
+void AChess_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 {
 	const FVector2D StartPosition = GField->GetSelectedTile();
 	const int32 IDPieceToMove = (*GField->TileMap.Find(StartPosition))->GetPiece()->GetPieceID();
@@ -189,7 +189,7 @@ void ATTT_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove)
 	}
 }
 
-void ATTT_GameMode::UndoMove(const bool bIsGameMove)
+void AChess_GameMode::UndoMove(const bool bIsGameMove)
 {
 	const FMove LastMove = Moves.Pop();
 
@@ -226,7 +226,7 @@ void ATTT_GameMode::UndoMove(const bool bIsGameMove)
 	}
 }
 
-void ATTT_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D End) const
+void AChess_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D End) const
 {
 	ATile*	StartTile	= *GField->TileMap.Find(Start);
 	const int32	StartOwner	= StartTile->GetOwner();
@@ -238,7 +238,7 @@ void ATTT_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D End)
 	(*GField->TileMap.Find(End))->SetTileStatus(StartOwner, ETileStatus::OCCUPIED, Piece);
 }
 
-int32 ATTT_GameMode::CaptureThePieceIfExist(FVector2D End, const bool bIsGamemove)
+int32 AChess_GameMode::CaptureThePieceIfExist(FVector2D End, const bool bIsGamemove)
 {
 	ATile* EndTile = *GField->TileMap.Find(End);
 
@@ -252,7 +252,7 @@ int32 ATTT_GameMode::CaptureThePieceIfExist(FVector2D End, const bool bIsGamemov
 	return -1;
 }
 
-int32 ATTT_GameMode::CaptureThePiece(FVector2D End, const bool bIsGameMove)
+int32 AChess_GameMode::CaptureThePiece(FVector2D End, const bool bIsGameMove)
 {
 	APiece* PieceKilled = (*GField->TileMap.Find(End))->GetPiece();
 	
@@ -285,7 +285,7 @@ int32 ATTT_GameMode::CaptureThePiece(FVector2D End, const bool bIsGameMove)
 	*/
 }
 
-void ATTT_GameMode::SetPieceLocation(const FVector2D End) const
+void AChess_GameMode::SetPieceLocation(const FVector2D End) const
 {
 	FVector EndLocation = GField->GetRelativeLocationByXYPosition(End.X, End.Y);
 	EndLocation.Z += 5;
@@ -293,12 +293,12 @@ void ATTT_GameMode::SetPieceLocation(const FVector2D End) const
 	(*GField->TileMap.Find(End))->GetPiece()->SetActorLocation(EndLocation);
 }
 
-bool ATTT_GameMode::IsPawn(const FVector2D Position) const
+bool AChess_GameMode::IsPawn(const FVector2D Position) const
 {
 	return (*GField->TileMap.Find(Position))->GetPiece()->GetPieceType() == EPieceType::PAWN;
 }
 
-void ATTT_GameMode::HandlePawnPromotionIfExists(const FVector2D Position, const bool bIsGameMove)
+void AChess_GameMode::HandlePawnPromotionIfExists(const FVector2D Position, const bool bIsGameMove)
 {
 	// Handle White Pawns
 	if (Position.X == GField->Size - 1)
@@ -311,7 +311,7 @@ void ATTT_GameMode::HandlePawnPromotionIfExists(const FVector2D Position, const 
 	}
 }
 
-void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Position, const bool bIsGameMove)
+void AChess_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Position, const bool bIsGameMove)
 {
 	if (bIsGameMove)
 	{
@@ -363,7 +363,7 @@ void ATTT_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Posi
 	}
 }
 
-void ATTT_GameMode::SetPromotionChoice(EPieceType PromotionType)
+void AChess_GameMode::SetPromotionChoice(EPieceType PromotionType)
 {
 	if (Promotion)
 	{
@@ -400,7 +400,7 @@ void ATTT_GameMode::SetPromotionChoice(EPieceType PromotionType)
 
 }
 
-void ATTT_GameMode::HandleUndoMoveForPawnsAndPromotion(FVector2D End, const bool bIsGameMove)
+void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(FVector2D End, const bool bIsGameMove)
 {
 	APiece* Piece = (*GField->TileMap.Find(End))->GetPiece();
 	if (Piece->IsPromoted())
@@ -429,7 +429,7 @@ void ATTT_GameMode::HandleUndoMoveForPawnsAndPromotion(FVector2D End, const bool
 
 }
 
-bool ATTT_GameMode::IsIllegalMove()
+bool AChess_GameMode::IsIllegalMove()
 {
 	// Given a state of Match
 
@@ -453,7 +453,7 @@ bool ATTT_GameMode::IsIllegalMove()
 	return false;
 }
 
-bool ATTT_GameMode::IsWinMove(const int32 Player)
+bool AChess_GameMode::IsWinMove(const int32 Player)
 {
 	for(const auto& CurrentTile : GField->TileArray)
 	{
@@ -487,7 +487,7 @@ bool ATTT_GameMode::IsWinMove(const int32 Player)
 	return true;
 }
 
-void ATTT_GameMode::UndoGesture(bool bIsGameMove)
+void AChess_GameMode::UndoGesture(bool bIsGameMove)
 {
 
 	if (Moves.Num() > 0 && CurrentPlayer == 0)

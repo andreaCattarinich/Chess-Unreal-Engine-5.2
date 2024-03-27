@@ -82,7 +82,7 @@ void AChess_HumanPlayer::OnClick()
 		return;
 	}
 
-	ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	// SE CLICCO SU UNA TILE
 	if (ATile* ClickedTile = Cast<ATile>(Hit.GetActor()))
@@ -97,7 +97,7 @@ void AChess_HumanPlayer::OnClick()
 }
 
 void AChess_HumanPlayer::HandleTileClick(
-	ATTT_GameMode* GameMode,
+	AChess_GameMode* GameMode,
 	ATile* ClickedTile
 )
 {
@@ -119,7 +119,7 @@ void AChess_HumanPlayer::HandleTileClick(
 }
 
 void AChess_HumanPlayer::HandlePieceClick(
-	ATTT_GameMode* GameMode,
+	AChess_GameMode* GameMode,
 	APiece* ClickedPiece
 )
 {
@@ -150,7 +150,7 @@ void AChess_HumanPlayer::HandlePieceClick(
 }
 
 void AChess_HumanPlayer::ExecuteTheMoveForHumanPlayer(
-	ATTT_GameMode* GameMode,
+	AChess_GameMode* GameMode,
 	ATile* EndTile
 )
 {

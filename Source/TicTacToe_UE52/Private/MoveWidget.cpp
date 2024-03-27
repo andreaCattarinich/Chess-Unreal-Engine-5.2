@@ -7,7 +7,7 @@ void UMoveWidget::SetData(const FMove& Move)
 {
 	NumberMove = Move.NumberMove;
 	
-	GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	const APiece* StartPiece = *GameMode->GField->PieceMap.Find(Move.IDPiece);
 	

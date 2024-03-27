@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Pawns.h"
-#include "TTT_GameMode.h"
+#include "..\Public\Chess_GameMode.h"
 
 APawns::APawns()
 {

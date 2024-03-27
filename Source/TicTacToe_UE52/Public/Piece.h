@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Piece.generated.h"
 
-class ATTT_GameMode;
+class AChess_GameMode;
 class AGameField;
 
 UENUM()
@@ -68,7 +68,7 @@ protected:
 	float PieceValue;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ATTT_GameMode* GameMode;
+	AChess_GameMode* GameMode;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsPromoted;

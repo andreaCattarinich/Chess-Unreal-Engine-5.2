@@ -4,7 +4,7 @@
 
 #include "Chess_GameInstance.h"
 #include "Chess_PlayerInterface.h"
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -41,7 +41,7 @@ public:
 	UChess_GameInstance* GameInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ATTT_GameMode* GameMode;
+	AChess_GameMode* GameMode;
 
 
 

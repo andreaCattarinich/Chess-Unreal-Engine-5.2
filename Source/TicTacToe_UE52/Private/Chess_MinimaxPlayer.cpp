@@ -2,7 +2,7 @@
 
 
 #include "..\Public\Chess_MinimaxPlayer.h"
-#include "TTT_GameMode.h"
+#include "..\Public\Chess_GameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -22,7 +22,7 @@ void AChess_MinimaxPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame

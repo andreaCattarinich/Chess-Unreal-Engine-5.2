@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "TTT_GameMode.h"
+#include "Chess_GameMode.h"
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
@@ -31,7 +31,7 @@ public:
 	void SetData(const FMove& Move);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	ATTT_GameMode* GameMode;
+	AChess_GameMode* GameMode;
 
 	FString TypeToChar(EPieceType Type) const;
 

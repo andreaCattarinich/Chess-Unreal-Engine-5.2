@@ -2,7 +2,7 @@
 
 #include "Piece.h"
 #include "GameField.h"
-#include "TTT_GameMode.h"
+#include "..\Public\Chess_GameMode.h"
 #include "UObject/ConstructorHelpers.h"
 
 int32 APiece::NewPieceID = 0;
@@ -59,7 +59,7 @@ void APiece::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void APiece::BeginPlay()
 {
 	Super::BeginPlay();
-	GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 void APiece::SetPieceID()
