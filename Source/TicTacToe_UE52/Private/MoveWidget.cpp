@@ -145,6 +145,10 @@ void UMoveWidget::SetData(const FMove& Move)
 		NumberMoveString = FString::FromInt(ceil(static_cast<float>(NumberMove)/2));
 		NumberMoveString += ".";
 	}
+	else
+	{
+		NumberMoveString += "   ";
+	}
 	
 	Number->SetText(FText::FromString(NumberMoveString));
 

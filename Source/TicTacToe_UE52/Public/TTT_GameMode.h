@@ -125,8 +125,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		int32 CurrentPlayerForPromotion; // 0 sceglie, 1 queen, 2 ...
-
-
+	
 	// ************ SETTERS ************
 	// Esegue tutte le operazioni sulla GameField per selezionare la Tile
 	// cliccata dallo Human Player (oppure la Tile cliccata dal
@@ -140,8 +139,6 @@ public:
 	int32 GetNextPlayer(int32 Player) const;
 
 	AGameField* GetGameField() const;
-
-
 
 	// ************ METHODS ************	
 	// Called at the start of the game

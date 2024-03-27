@@ -21,7 +21,7 @@ AGameField::AGameField()
 	PrimaryActorTick.bCanEverTick = false;
 
 	Size = 8;						// Size of the field (8x8)
-	TileSize = 120;					// Tile dimension
+	TileSize = 150;					// Tile dimension
 	CellPadding = 0;				// Tile padding dimension
 	NormalizedCellPadding = 0.0f;
 	PieceScalePercentage = 100;
@@ -113,10 +113,8 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 	return FVector2D(x, y);
 }
 
-// TODO: implementare
 FVector2D AGameField::GetKingPosition(const int32 Player) const
 {
-	// TODO: NUOVA IMPLEMENTAZIONE!!!!
 	for (auto& CurrentTile : TileArray)
 	{
 		if(CurrentTile->GetOwner() == Player)
@@ -127,6 +125,7 @@ FVector2D AGameField::GetKingPosition(const int32 Player) const
 			}
 		}
 	}
+	
 	return FVector2D(-1, -1);
 }
 
@@ -151,7 +150,8 @@ void AGameField::GenerateField()
 			CurrentTile->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			CurrentTile->SetGridPosition(x, y);
 
-			/************ CODICE PER GESTIRE LA STAMPA DEI NUMERI/LETTERE A BORDO PARTITA ************/ 
+			/************ CODICE PER GESTIRE LA STAMPA DEI NUMERI/LETTERE A BORDO PARTITA ************/
+			// TODO: eventualmente mettere queste linee di codice dentro a un metodo
 			CurrentTile->TileTextNumber->SetRelativeLocation(FVector(Location.X + (TileSize / 6), Location.Y - (TileSize * 5/12), 5.0f));
 			CurrentTile->TileTextNumber->SetRelativeRotation(FRotator(90,0,180));
 			CurrentTile->TileTextNumber->SetXScale(TileSize/80);

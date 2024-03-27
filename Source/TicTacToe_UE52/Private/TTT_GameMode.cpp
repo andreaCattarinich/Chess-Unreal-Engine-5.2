@@ -66,17 +66,24 @@ void ATTT_GameMode::BeginPlay()
 	Players.Add(HumanPlayer);
 	PlayerNames.Add(0, "Player");
 
-	// Random Player
-	//auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
-	//PlayerNames.Add(1, "AI");
-
-	// MiniMax Player
-	auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
-
-	// AI player = 1
-	Players.Add(AI);
-	PlayerNames.Add(1, "AI");
-
+	
+	UTTT_GameInstance* GameInstance = Cast<UTTT_GameInstance>(GetGameInstance());
+	
+	if(GameInstance->Difficulty == 0)
+	{
+		// Random Player
+		auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
+		Players.Add(AI);
+		PlayerNames.Add(1, "AI");
+	}
+	else
+	{
+		// MiniMax Player
+		auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
+		Players.Add(AI);
+		PlayerNames.Add(1, "AI");
+	}
+	
 
 	MovesPanel = CreateWidget<UMovesPanel>(GetGameInstance(), WidgetClass);
 

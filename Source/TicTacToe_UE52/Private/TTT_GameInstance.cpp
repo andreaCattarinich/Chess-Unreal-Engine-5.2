@@ -8,6 +8,11 @@ void UTTT_GameInstance::SetTurnMessage(FString Message)
 	CurrentTurnMessage = Message;
 }
 
+void UTTT_GameInstance::SetOpponent(const int32 SelectedOpp)
+{
+	Difficulty = SelectedOpp;
+}
+
 int32 UTTT_GameInstance::GetScoreHumanPlayer()
 {
 	return ScoreHumanPlayer;

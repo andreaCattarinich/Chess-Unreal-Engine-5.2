@@ -26,13 +26,16 @@ public:
 	UPROPERTY(EditAnywhere)
 		FString CurrentTurnMessage = "Current Player";
 
-
+	UPROPERTY(BlueprintReadWrite, Category = "Difficulty")
+	int32 Difficulty;
 
 	// ************ SETTERS ************ 
 	// Set the turn message
 	UFUNCTION(BlueprintCallable)
 		void SetTurnMessage(FString Message);
 
+	UFUNCTION(BlueprintCallable)
+	void SetOpponent(const int32 SelectedOpp);
 
 
 	// ************ GETTERS ************
