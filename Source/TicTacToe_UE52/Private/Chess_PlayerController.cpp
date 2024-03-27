@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TTT_PlayerController.h"
+#include "..\Public\Chess_PlayerController.h"
 #include "Components/InputComponent.h"
 
-ATTT_PlayerController::ATTT_PlayerController()
+AChess_PlayerController::AChess_PlayerController()
 {
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 }
 
-void ATTT_PlayerController::BeginPlay()
+void AChess_PlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -20,7 +20,7 @@ void ATTT_PlayerController::BeginPlay()
 	}
 }
 
-void ATTT_PlayerController::ClickOnGrid()
+void AChess_PlayerController::ClickOnGrid()
 {
 	const auto HumanPlayer = Cast<AChess_HumanPlayer>(GetPawn());
 	if (IsValid(HumanPlayer))
@@ -29,13 +29,13 @@ void ATTT_PlayerController::ClickOnGrid()
 	}
 }
 
-void ATTT_PlayerController::SetupInputComponent()
+void AChess_PlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Triggered, this, &ATTT_PlayerController::ClickOnGrid);
+		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Triggered, this, &AChess_PlayerController::ClickOnGrid);
 	}
 }

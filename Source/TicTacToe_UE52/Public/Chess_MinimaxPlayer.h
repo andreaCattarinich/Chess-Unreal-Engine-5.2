@@ -6,12 +6,12 @@
 #include "TTT_GameMode.h"
 
 #include "CoreMinimal.h"
-#include "TTT_PlayerInterface.h"
+#include "Chess_PlayerInterface.h"
 #include "Chess_GameInstance.h"
 #include "Tile.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
-#include "TTT_MinimaxPlayer.generated.h"
+#include "Chess_MinimaxPlayer.generated.h"
 
 USTRUCT(BlueprintType)
 struct FEvaluation
@@ -36,13 +36,13 @@ struct FEvaluation
 };
 
 UCLASS()
-class TICTACTOE_UE52_API ATTT_MinimaxPlayer : public APawn, public ITTT_PlayerInterface
+class TICTACTOE_UE52_API AChess_MinimaxPlayer : public APawn, public IChess_PlayerInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	ATTT_MinimaxPlayer();
+	AChess_MinimaxPlayer();
 
 	UChess_GameInstance* GameInstance;
 

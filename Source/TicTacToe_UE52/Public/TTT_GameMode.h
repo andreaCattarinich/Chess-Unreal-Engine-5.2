@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "TTT_PlayerInterface.h"
+#include "Chess_PlayerInterface.h"
 #include "GameField.h"
 
 #include "CoreMinimal.h"
@@ -73,7 +73,7 @@ public:
 	bool IsGameOver;
 
 	// Array of player interfaces
-	TArray<ITTT_PlayerInterface*> Players;
+	TArray<IChess_PlayerInterface*> Players;
 	TMap<int32, FString> PlayerNames;
 
 	int32 CurrentPlayer;

@@ -4,26 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "TTT_PlayerInterface.generated.h"
-
-/* TODO: cancellare
-UENUM()
-enum class ESign : uint8
-{
-	X,
-	O,
-	E
-};
-*/
+#include "Chess_PlayerInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UTTT_PlayerInterface : public UInterface
+class UChess_PlayerInterface : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class TICTACTOE_UE52_API ITTT_PlayerInterface
+class TICTACTOE_UE52_API IChess_PlayerInterface
 {
 	GENERATED_BODY()
 

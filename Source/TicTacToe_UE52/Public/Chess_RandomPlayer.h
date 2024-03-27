@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Chess_GameInstance.h"
-#include "TTT_PlayerInterface.h"
+#include "Chess_PlayerInterface.h"
 #include "TTT_GameMode.h"
 
 #include "CoreMinimal.h"
@@ -14,7 +14,7 @@
 #include "Chess_RandomPlayer.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API AChess_RandomPlayer : public APawn, public ITTT_PlayerInterface
+class TICTACTOE_UE52_API AChess_RandomPlayer : public APawn, public IChess_PlayerInterface
 {
 	GENERATED_BODY()
 

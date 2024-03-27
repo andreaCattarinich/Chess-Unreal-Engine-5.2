@@ -12,16 +12,16 @@
 #include "InputActionValue.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "TTT_PlayerController.generated.h"
+#include "Chess_PlayerController.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API ATTT_PlayerController : public APlayerController
+class TICTACTOE_UE52_API AChess_PlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
 public:
 	// ************ CONSTRUCTORS ************
-	ATTT_PlayerController();
+	AChess_PlayerController();
 
 protected:
 	virtual void BeginPlay() override;

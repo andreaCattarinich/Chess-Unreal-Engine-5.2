@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TTT_MinimaxPlayer.h"
+#include "..\Public\Chess_MinimaxPlayer.h"
 #include "TTT_GameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
-ATTT_MinimaxPlayer::ATTT_MinimaxPlayer()
+AChess_MinimaxPlayer::AChess_MinimaxPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,7 +18,7 @@ ATTT_MinimaxPlayer::ATTT_MinimaxPlayer()
 }
 
 // Called when the game starts or when spawned
-void ATTT_MinimaxPlayer::BeginPlay()
+void AChess_MinimaxPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -26,18 +26,18 @@ void ATTT_MinimaxPlayer::BeginPlay()
 }
 
 // Called every frame
-void ATTT_MinimaxPlayer::Tick(const float DeltaTime)
+void AChess_MinimaxPlayer::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void ATTT_MinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AChess_MinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ATTT_MinimaxPlayer::OnTurn()
+void AChess_MinimaxPlayer::OnTurn()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Minimax) Turn"));
 	GameInstance->SetTurnMessage(TEXT("AI (Minimax) Turn"));
@@ -67,20 +67,20 @@ void ATTT_MinimaxPlayer::OnTurn()
 		}, 1.0f, false);
 }
 
-void ATTT_MinimaxPlayer::OnWin()
+void AChess_MinimaxPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Minimax) Wins!"));
 	GameInstance->SetTurnMessage(TEXT("AI Wins!"));
 	GameInstance->IncrementScoreAiPlayer();
 }
 
-void ATTT_MinimaxPlayer::OnLose()
+void AChess_MinimaxPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Minimax) Loses!"));
 	// GameInstance->SetTurnMessage(TEXT("AI Loses!"));
 }
 
-FMove ATTT_MinimaxPlayer::FindBestMove(TArray<ATile*> Board)
+FMove AChess_MinimaxPlayer::FindBestMove(TArray<ATile*> Board)
 {
 	//return TPair<FVector2D, FVector2D>();
 	
@@ -129,7 +129,7 @@ FMove ATTT_MinimaxPlayer::FindBestMove(TArray<ATile*> Board)
 	return Evaluation.Move;
 }
 
-FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
+FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 	TArray<ATile*>& Board,
 	const int32 Depth,
 	const bool bIsMax
@@ -255,7 +255,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChess(
 	}
 }
 
-FEvaluation ATTT_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32 Depth, int32 Alpha, int32 Beta,
+FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32 Depth, int32 Alpha, int32 Beta,
 	bool bIsMax)
 {
 	NodesVisited++;
@@ -394,7 +394,7 @@ FEvaluation ATTT_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32
 	}
 }
 
-int32 ATTT_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) const
+int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) const
 {
 	// TODO: FARE L'EURISTICA
 	/*

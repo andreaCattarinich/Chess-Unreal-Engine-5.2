@@ -5,7 +5,7 @@
 
 
 #include "Chess_GameInstance.h"
-#include "TTT_PlayerInterface.h"
+#include "Chess_PlayerInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -14,7 +14,7 @@
 #include "Chess_HumanPlayer.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API AChess_HumanPlayer : public APawn, public ITTT_PlayerInterface
+class TICTACTOE_UE52_API AChess_HumanPlayer : public APawn, public IChess_PlayerInterface
 {
 	GENERATED_BODY()
 

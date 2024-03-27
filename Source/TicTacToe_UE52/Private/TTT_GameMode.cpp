@@ -8,10 +8,10 @@
 #include "Knight.h"
 
 #include "GameField.h"
-#include "TTT_PlayerController.h"
+#include "..\Public\Chess_PlayerController.h"
 #include "..\Public\Chess_HumanPlayer.h"
 #include "..\Public\Chess_RandomPlayer.h"
-#include "TTT_MinimaxPlayer.h"
+#include "..\Public\Chess_MinimaxPlayer.h"
 
 #include "MovesPanel.h"
 #include "Promotion.h"
@@ -21,7 +21,7 @@
 
 ATTT_GameMode::ATTT_GameMode()
 {
-	PlayerControllerClass = ATTT_PlayerController::StaticClass();
+	PlayerControllerClass = AChess_PlayerController::StaticClass();
 	DefaultPawnClass = AChess_HumanPlayer::StaticClass();
 
 	FieldSize = 8;
@@ -79,7 +79,7 @@ void ATTT_GameMode::BeginPlay()
 	else
 	{
 		// MiniMax Player
-		auto* AI = GetWorld()->SpawnActor<ATTT_MinimaxPlayer>(FVector(), FRotator());
+		auto* AI = GetWorld()->SpawnActor<AChess_MinimaxPlayer>(FVector(), FRotator());
 		Players.Add(AI);
 		PlayerNames.Add(1, "AI");
 	}
