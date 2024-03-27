@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TTT_HumanPlayer.h"
+//#include "..\Public\Chess_HumanPlayer.h"
 
+#include "Chess_HumanPlayer.h"
 #include "GameField.h"
 
 #include "Components/InputComponent.h"
@@ -9,7 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 
 // Sets default values
-ATTT_HumanPlayer::ATTT_HumanPlayer()
+AChess_HumanPlayer::AChess_HumanPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,51 +25,51 @@ ATTT_HumanPlayer::ATTT_HumanPlayer()
 	SetRootComponent(Camera);
 
 	// get the game instance reference
-	GameInstance = Cast<UTTT_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GameInstance = Cast<UChess_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	
 	// default init values
 	PlayerNumber = -1;
 }
 
 // Called when the game starts or when spawned
-void ATTT_HumanPlayer::BeginPlay()
+void AChess_HumanPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 // Called every frame
-void ATTT_HumanPlayer::Tick(float DeltaTime)
+void AChess_HumanPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void ATTT_HumanPlayer::OnTurn()
+void AChess_HumanPlayer::OnTurn()
 {
 	IsMyTurn = true;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Your Turn"));
 	GameInstance->SetTurnMessage(TEXT("Human Turn!"));
 }
 
-void ATTT_HumanPlayer::OnWin()
+void AChess_HumanPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("You Win!"));
 	GameInstance->SetTurnMessage(TEXT("Human Wins!"));
 	GameInstance->IncrementScoreHumanPlayer();
 }
 
-void ATTT_HumanPlayer::OnLose()
+void AChess_HumanPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("You Lose!"));
 	GameInstance->SetTurnMessage(TEXT("Human Loses!"));
 }
 
 // Called to bind functionality to input
-void ATTT_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AChess_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ATTT_HumanPlayer::OnClick()
+void AChess_HumanPlayer::OnClick()
 {
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
@@ -95,7 +96,7 @@ void ATTT_HumanPlayer::OnClick()
 	}
 }
 
-void ATTT_HumanPlayer::HandleTileClick(
+void AChess_HumanPlayer::HandleTileClick(
 	ATTT_GameMode* GameMode,
 	ATile* ClickedTile
 )
@@ -117,7 +118,7 @@ void ATTT_HumanPlayer::HandleTileClick(
 	}
 }
 
-void ATTT_HumanPlayer::HandlePieceClick(
+void AChess_HumanPlayer::HandlePieceClick(
 	ATTT_GameMode* GameMode,
 	APiece* ClickedPiece
 )
@@ -148,7 +149,7 @@ void ATTT_HumanPlayer::HandlePieceClick(
 	}
 }
 
-void ATTT_HumanPlayer::ExecuteTheMoveForHumanPlayer(
+void AChess_HumanPlayer::ExecuteTheMoveForHumanPlayer(
 	ATTT_GameMode* GameMode,
 	ATile* EndTile
 )

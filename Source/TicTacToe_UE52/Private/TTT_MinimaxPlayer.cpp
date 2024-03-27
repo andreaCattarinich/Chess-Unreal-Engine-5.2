@@ -10,7 +10,7 @@ ATTT_MinimaxPlayer::ATTT_MinimaxPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GameInstance = Cast<UTTT_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GameInstance = Cast<UChess_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	// Profondità di ricerca dell'albero di ricorsione delle mosse
 	STD_DEPTH = 3;

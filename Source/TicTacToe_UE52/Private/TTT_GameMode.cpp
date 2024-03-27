@@ -9,8 +9,8 @@
 
 #include "GameField.h"
 #include "TTT_PlayerController.h"
-#include "TTT_HumanPlayer.h"
-#include "TTT_RandomPlayer.h"
+#include "..\Public\Chess_HumanPlayer.h"
+#include "..\Public\Chess_RandomPlayer.h"
 #include "TTT_MinimaxPlayer.h"
 
 #include "MovesPanel.h"
@@ -22,7 +22,7 @@
 ATTT_GameMode::ATTT_GameMode()
 {
 	PlayerControllerClass = ATTT_PlayerController::StaticClass();
-	DefaultPawnClass = ATTT_HumanPlayer::StaticClass();
+	DefaultPawnClass = AChess_HumanPlayer::StaticClass();
 
 	FieldSize = 8;
 	IsGameOver = false;
@@ -44,7 +44,7 @@ void ATTT_GameMode::BeginPlay()
 
 	MoveCounter = 0;
 
-	ATTT_HumanPlayer* HumanPlayer = Cast<ATTT_HumanPlayer>(*TActorIterator<ATTT_HumanPlayer>(GetWorld()));
+	AChess_HumanPlayer* HumanPlayer = Cast<AChess_HumanPlayer>(*TActorIterator<AChess_HumanPlayer>(GetWorld()));
 
 	if (GameFieldClass != nullptr)
 	{
@@ -67,12 +67,12 @@ void ATTT_GameMode::BeginPlay()
 	PlayerNames.Add(0, "Player");
 
 	
-	UTTT_GameInstance* GameInstance = Cast<UTTT_GameInstance>(GetGameInstance());
+	UChess_GameInstance* GameInstance = Cast<UChess_GameInstance>(GetGameInstance());
 	
 	if(GameInstance->Difficulty == 0)
 	{
 		// Random Player
-		auto* AI = GetWorld()->SpawnActor<ATTT_RandomPlayer>(FVector(), FRotator());
+		auto* AI = GetWorld()->SpawnActor<AChess_RandomPlayer>(FVector(), FRotator());
 		Players.Add(AI);
 		PlayerNames.Add(1, "AI");
 	}

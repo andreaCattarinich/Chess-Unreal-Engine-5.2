@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-/*  PlayerController è un Asset che serve a trasformare
+/*  PlayerController Ã¨ un Asset che serve a trasformare
 	input esterni ad azioni del gioco.
 */
 #pragma once
 
-#include "TTT_HumanPlayer.h"
+#include "Chess_HumanPlayer.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"

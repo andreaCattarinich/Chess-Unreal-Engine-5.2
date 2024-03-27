@@ -5,10 +5,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "TTT_GameInstance.generated.h"
+#include "Chess_GameInstance.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API UTTT_GameInstance : public UGameInstance
+class TICTACTOE_UE52_API UChess_GameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
@@ -59,7 +59,4 @@ public:
 
 	// Increment the score for AI player
 	void IncrementScoreAiPlayer();
-
-
-
 };

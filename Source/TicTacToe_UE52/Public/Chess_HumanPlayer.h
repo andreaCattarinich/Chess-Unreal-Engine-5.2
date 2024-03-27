@@ -4,24 +4,24 @@
 #include "TTT_GameMode.h"
 
 
-#include "TTT_GameInstance.h"
+#include "Chess_GameInstance.h"
 #include "TTT_PlayerInterface.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "TTT_HumanPlayer.generated.h"
+#include "Chess_HumanPlayer.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API ATTT_HumanPlayer : public APawn, public ITTT_PlayerInterface
+class TICTACTOE_UE52_API AChess_HumanPlayer : public APawn, public ITTT_PlayerInterface
 {
 	GENERATED_BODY()
 
 public:
 	// ************ CONSTRUCTORS ************
 	// Sets default values for this pawn's properties
-	ATTT_HumanPlayer();
+	AChess_HumanPlayer();
 
 
 protected:
@@ -42,7 +42,7 @@ public:
 	UCameraComponent* Camera;
 
 	// Game instance reference
-	UTTT_GameInstance* GameInstance;
+	UChess_GameInstance* GameInstance;
 
 
 

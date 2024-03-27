@@ -22,7 +22,7 @@ void ATTT_PlayerController::BeginPlay()
 
 void ATTT_PlayerController::ClickOnGrid()
 {
-	const auto HumanPlayer = Cast<ATTT_HumanPlayer>(GetPawn());
+	const auto HumanPlayer = Cast<AChess_HumanPlayer>(GetPawn());
 	if (IsValid(HumanPlayer))
 	{
 		HumanPlayer->OnClick();

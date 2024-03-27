@@ -7,7 +7,7 @@
 
 #include "CoreMinimal.h"
 #include "TTT_PlayerInterface.h"
-#include "TTT_GameInstance.h"
+#include "Chess_GameInstance.h"
 #include "Tile.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
@@ -44,7 +44,7 @@ public:
 	// Sets default values for this pawn's properties
 	ATTT_MinimaxPlayer();
 
-	UTTT_GameInstance* GameInstance;
+	UChess_GameInstance* GameInstance;
 
 protected:
 	// Called when the game starts or when spawned

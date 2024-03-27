@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TTT_RandomPlayer.h"
+#include "..\Public\Chess_RandomPlayer.h"
 
 // Sets default values
-ATTT_RandomPlayer::ATTT_RandomPlayer()
+AChess_RandomPlayer::AChess_RandomPlayer()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GameInstance = Cast<UTTT_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GameInstance = Cast<UChess_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 }
 
 // Called when the game starts or when spawned
-void ATTT_RandomPlayer::BeginPlay()
+void AChess_RandomPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -19,18 +19,18 @@ void ATTT_RandomPlayer::BeginPlay()
 }
 
 // Called every frame
-void ATTT_RandomPlayer::Tick(const float DeltaTime)
+void AChess_RandomPlayer::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
-void ATTT_RandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AChess_RandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ATTT_RandomPlayer::OnTurn()
+void AChess_RandomPlayer::OnTurn()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
 	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
@@ -39,20 +39,20 @@ void ATTT_RandomPlayer::OnTurn()
 	DecideMove(); 
 }
 
-void ATTT_RandomPlayer::OnWin()
+void AChess_RandomPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Wins!"));
 	GameInstance->SetTurnMessage(TEXT("AI Wins!"));
 	GameInstance->IncrementScoreAiPlayer();
 }
 
-void ATTT_RandomPlayer::OnLose()
+void AChess_RandomPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Loses!"));
 	// GameInstance->SetTurnMessage(TEXT("AI Loses!"));
 }
 
-void ATTT_RandomPlayer::DecideMove()
+void AChess_RandomPlayer::DecideMove()
 {
 	FTimerHandle TimerHandle1;
 
@@ -79,7 +79,7 @@ void ATTT_RandomPlayer::DecideMove()
 		}, 0.5f, false);
 }
 
-void ATTT_RandomPlayer::SelectRandomPiece() const
+void AChess_RandomPlayer::SelectRandomPiece() const
 {
 	TArray<ATile*> AIPieces;
 
@@ -104,7 +104,7 @@ void ATTT_RandomPlayer::SelectRandomPiece() const
 	GameMode->SetSelectedTile(Position);
 }
 
-void ATTT_RandomPlayer::RandomMove() const
+void AChess_RandomPlayer::RandomMove() const
 {	
 	// MOSSA CASUALE
 	TArray<FVector2D> AILegalMoves = GameMode->GField->GetLegalMoves();

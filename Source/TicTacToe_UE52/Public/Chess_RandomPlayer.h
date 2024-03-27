@@ -2,24 +2,26 @@
 
 #pragma once
 
-#include "TTT_GameInstance.h"
+#include "Chess_GameInstance.h"
 #include "TTT_PlayerInterface.h"
 #include "TTT_GameMode.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Kismet/GameplayStatics.h" // TODO: NON TOGLIERE QUESTO INCLUDE
-#include "TTT_RandomPlayer.generated.h"
+
+//TODO: keep this include 
+#include "Kismet/GameplayStatics.h" 
+#include "Chess_RandomPlayer.generated.h"
 
 UCLASS()
-class TICTACTOE_UE52_API ATTT_RandomPlayer : public APawn, public ITTT_PlayerInterface
+class TICTACTOE_UE52_API AChess_RandomPlayer : public APawn, public ITTT_PlayerInterface
 {
 	GENERATED_BODY()
 
 public:
 	// ************ CONSTRUCTORS ************
 	// Sets default values for this pawn's properties
-	ATTT_RandomPlayer();
+	AChess_RandomPlayer();
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,7 +38,7 @@ public:
 
 	// ************ ATTRIBUTES ************	
 	// Game instance reference
-	UTTT_GameInstance* GameInstance;
+	UChess_GameInstance* GameInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	ATTT_GameMode* GameMode;
