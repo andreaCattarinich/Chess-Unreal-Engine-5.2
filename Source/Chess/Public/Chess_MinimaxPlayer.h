@@ -103,4 +103,7 @@ public:
 
 	FMove FindBestMove(TArray<ATile*> Board);
 
+	void DecideMove();
+	void SelectRandomPiece() const;
+	void RandomMove() const;
 };

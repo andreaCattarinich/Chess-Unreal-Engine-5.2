@@ -54,16 +54,26 @@ void AChess_MinimaxPlayer::OnTurn()
 
 			FMove BestMove = FindBestMove(GameMode->GField->TileArray);
 
-			GameMode->SetSelectedTile(BestMove.Start);
+			// Mettere GameOver = false
+			GameMode->IsGameOver = false;
+		
+			if(!(GameMode->GField->IsValidPosition(BestMove.Start)) || !(GameMode->GField->IsValidPosition(BestMove.End)))
+			{
+				DecideMove();
+			}
+			else
+			{
+				GameMode->SetSelectedTile(BestMove.Start);
 
-			FTimerHandle TimerHandle2;
-
-			// Effettua la mossa migliore dopo 1 secondo
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle2, [BestMove, this]()
-				{
-					GameMode->DoMove(BestMove.End, true);
-				}, 1.0f, false);
-			
+				FTimerHandle TimerHandle2;
+							
+				// Effettua la mossa migliore dopo 1 secondo
+				GetWorld()->GetTimerManager().SetTimer(TimerHandle2, [BestMove, this]()
+					{
+						GameMode->DoMove(BestMove.End, true);
+					}, 1.0f, false);
+			}
+			/*****/
 		}, 1.0f, false);
 }
 
@@ -144,7 +154,8 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 {	
 	NodesVisited++;
 
-	if (Depth == 0)
+	//if (Depth == 0)
+	if (Depth == 0 || GameMode->IsGameOver)
 	{
 		return FEvaluation(EvaluateChessGrid(GameMode->GField->TileArray, bIsMax), FMove());
 	}
@@ -267,7 +278,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int
 {
 	NodesVisited++;
 
-	if (Depth == 0)
+	if (Depth == 0 || GameMode->IsGameOver)
 	{
 		return FEvaluation(EvaluateChessGrid(GameMode->GField->TileArray, bIsMax), FMove());
 	}
@@ -433,6 +444,8 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	{
 		if(GameMode->IsWinnerMove(1, false))
 		{
+			// GameOver = true
+			GameMode->IsGameOver = true;
 			return 10000;
 		}
 	}
@@ -440,6 +453,8 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	{
 		if(GameMode->IsWinnerMove(0, false))
 		{
+			// GameOver = true
+			GameMode->IsGameOver = true;
 			return -10000;	
 		}
 	}
@@ -450,5 +465,59 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	else
 	{
 		return WhiteScore - BlackScore;
+	}
+}
+
+void AChess_MinimaxPlayer::DecideMove()
+{
+	SelectRandomPiece();
+
+	if (GameMode->GField->GetLegalMoves().Num() == 0)
+	{	
+		DecideMove();
+	}
+	else
+	{
+		RandomMove();
+	}
+}
+
+void AChess_MinimaxPlayer::SelectRandomPiece() const
+{
+	TArray<ATile*> AIPieces;
+
+	for (ATile* CurrentTile : GameMode->GField->TileArray)
+	{
+		if (CurrentTile->GetOwner() == PlayerNumber)
+		{
+			AIPieces.Add(CurrentTile);
+		}
+	}
+
+	if (AIPieces.Num() == 0)
+	{
+		return;
+	}
+
+	const int32 RandIdx = FMath::Rand() % AIPieces.Num();
+	const FVector2D Position = FVector2D(
+		(AIPieces[RandIdx])->GetGridPosition()[0],
+		(AIPieces[RandIdx])->GetGridPosition()[1]
+	);
+	GameMode->SetSelectedTile(Position);
+}
+
+void AChess_MinimaxPlayer::RandomMove() const
+{	
+	// MOSSA CASUALE
+	TArray<FVector2D> AILegalMoves = GameMode->GField->GetLegalMoves();
+
+	const int32 RandIdx = FMath::Rand() % AILegalMoves.Num();
+	const FVector2D Position = AILegalMoves[RandIdx];
+
+	const ATile* RandomTile = *GameMode->GField->TileMap.Find(Position);
+	if (RandomTile->IsLegalTile())
+	{
+		GameMode->DoMove(Position, true);
 	}
 }
