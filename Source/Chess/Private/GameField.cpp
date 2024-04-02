@@ -423,7 +423,8 @@ void AGameField::ResetField()
 	//	E devo ri-spawnare tutti i pezzi.
 	
 	GeneratePieces();
-	
+	ResetGameStatusField();
+
 	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 	GameMode->PrepareReset();
 	GameMode->Moves.Empty();

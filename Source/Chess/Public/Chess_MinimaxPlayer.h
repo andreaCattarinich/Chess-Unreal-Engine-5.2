@@ -82,10 +82,8 @@ public:
 
 	
 	/**** METHODS ****/
-	int32 EvaluateChessGrid(
-		TArray<ATile*>& Board,
-		bool bIsMax
-	) const;
+	int32 EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) const;
+	int32 EvaluateChessGridFromPosition(TArray<ATile*>& Board, bool bIsMax) const;
 
 	FEvaluation MiniMaxChess(
 		TArray<ATile*>& Board,

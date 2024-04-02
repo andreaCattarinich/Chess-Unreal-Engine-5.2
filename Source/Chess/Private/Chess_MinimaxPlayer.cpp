@@ -273,8 +273,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 	}
 }
 
-FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32 Depth, int32 Alpha, int32 Beta,
-	bool bIsMax)
+FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int32 Depth, int32 Alpha, int32 Beta, const bool bIsMax)
 {
 	NodesVisited++;
 
@@ -466,6 +465,11 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	{
 		return WhiteScore - BlackScore;
 	}
+}
+
+int32 AChess_MinimaxPlayer::EvaluateChessGridFromPosition(TArray<ATile*>& Board, bool bIsMax) const
+{
+	
 }
 
 void AChess_MinimaxPlayer::DecideMove()
