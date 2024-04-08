@@ -109,7 +109,7 @@ void AChess_HumanPlayer::HandleTileClick(
 {
 	// SE CLICCO SU UNA TILE CHE MI APPARTIENE
 	// => Setto la tile come attiva (selezionata)
-	if (ClickedTile->GetOwner() == PlayerNumber)
+	if (ClickedTile->GetTileOwner() == PlayerNumber)
 	{
 		FVector2D Position = ClickedTile->GetGridPosition();
 		GameMode->SetSelectedTile(Position);
@@ -130,7 +130,7 @@ void AChess_HumanPlayer::HandlePieceClick(
 )
 {
 	// SE IL PEZZO DELLO HUMAN PLAYER
-	if (ClickedPiece->GetOwner() == PlayerNumber)
+	if (ClickedPiece->GetPieceOwner() == PlayerNumber)
 	{
 		// SE IL PEZZO APPENA PREMUTO E' QUELLO ATTIVO
 		// => Allora disattivo la Tile attiva (selezionata)
@@ -162,6 +162,6 @@ void AChess_HumanPlayer::ExecuteTheMoveForHumanPlayer(
 {
 	// TODO: rinominare questa funzione
 	//GameMode->Gesture(PlayerNumber, EndTile, true);
-	GameMode->DoMove(EndTile->GetGridPosition(), true);
 	IsMyTurn = false;
+	GameMode->DoMove(EndTile->GetGridPosition(), true);
 }

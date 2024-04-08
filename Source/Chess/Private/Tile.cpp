@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright © 2024 Andrea Cattarinich
 
 #include "Tile.h"
 #include "Components/TextRenderComponent.h"
@@ -37,19 +36,14 @@ void ATile::BeginPlay()
 	Super::BeginPlay();
 }
 
-
-
-void ATile::SetTileStatus(
-	const int32 TileOwner,
-	const ETileStatus TileStatus,
-	APiece* TilePiece)
+void ATile::SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus, APiece* TilePiece)
 {
 	PlayerOwner = TileOwner;
 	Status = TileStatus;
 	Piece = TilePiece;
 }
 
-void ATile::SetTileGameStatus(ETileGameStatus NewTileGameStatus)
+void ATile::SetTileGameStatus(const ETileGameStatus NewTileGameStatus)
 {
 	TileGameStatus = NewTileGameStatus;
 
@@ -57,7 +51,6 @@ void ATile::SetTileGameStatus(ETileGameStatus NewTileGameStatus)
 		? bIsLegal = true
 		: bIsLegal = false;
 	
-	// TODO: valutare se effettuare il cambio del materiale proprio da questo metodo
 	SetTileMaterial();
 }
 
@@ -66,9 +59,8 @@ void ATile::SetGridPosition(const double InX, const double InY)
 	TileGridPosition.Set(InX, InY);
 }
 
-void ATile::SetTileMaterial()
+void ATile::SetTileMaterial() const
 {
-	// TODO: scegliere come cambiare il colore delle Tile
 	const FString MaterialPath = GetTileMaterialPath();
 
 	UMaterialInterface* Material = LoadObject<UMaterialInterface>(
@@ -78,9 +70,6 @@ void ATile::SetTileMaterial()
 
 	StaticMeshComponent->SetMaterial(0, Material);	
 }
-
-
-
 
 ETileStatus ATile::GetTileStatus() const
 {
@@ -102,7 +91,7 @@ FVector2D ATile::GetGridPosition() const
 	return TileGridPosition;
 }
 
-int32 ATile::GetOwner()
+int32 ATile::GetTileOwner() const
 {
 	return PlayerOwner;
 }
@@ -112,12 +101,9 @@ APiece* ATile::GetPiece() const
 	return Piece;
 }
 
-
-
-
-FString ATile::GetTileMaterialPath()
+FString ATile::GetTileMaterialPath() const
 {
-	FString MaterialPath = "/Game/Materials/MI_";
+	const FString MaterialPath = "/Game/Materials/MI_";
 
 	if (TileGameStatus == ETileGameStatus::FREE)
 	{
@@ -125,18 +111,14 @@ FString ATile::GetTileMaterialPath()
 		const int32 X = static_cast<int>(Position.X);
 		const int32 Y = static_cast<int>(Position.Y);
 
-		FString Color = ((X + Y) % 2 == 0)
-			? "DARK"
-			: "LIGHT";
+		const FString Color = ((X + Y) % 2 == 0)
+			                      ? "DARK"
+			                      : "LIGHT";
 
-		MaterialPath += Color;
+		return MaterialPath + Color;
 	}
-	else
-	{
-		MaterialPath += GameStatusToString();
-	}
-
-	return MaterialPath;
+	
+	return MaterialPath + GameStatusToString();
 }
 
 FString ATile::GameStatusToString() const

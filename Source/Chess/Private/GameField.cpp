@@ -118,7 +118,7 @@ FVector2D AGameField::GetKingPosition(const int32 Player) const
 {
 	for (auto& CurrentTile : TileArray)
 	{
-		if(CurrentTile->GetOwner() == Player)
+		if(CurrentTile->GetTileOwner() == Player)
 		{
 			if(CurrentTile->GetPiece()->GetPieceType() == EPieceType::KING)
 			{
@@ -348,7 +348,7 @@ TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 {
 
 	// If the tile passed as an argument does not belong (non appartiene) to any player
-	if(!IsValidPosition(Position) || (*TileMap.Find(Position))->GetOwner() == NOT_ASSIGNED)
+	if(!IsValidPosition(Position) || (*TileMap.Find(Position))->GetTileOwner() == NOT_ASSIGNED)
 	{
 		return TArray<FVector2D>();
 	}
@@ -390,7 +390,7 @@ void AGameField::ShowLegalMovesInTheField()
 	{
 		ATile* CurrentTile = *TileMap.Find(Position);
 
-		if (CurrentTile->GetOwner() == (GameMode->CurrentPlayer ^ 1))
+		if (CurrentTile->GetTileOwner() == (GameMode->CurrentPlayer ^ 1))
 		{
 			CurrentTile->SetTileGameStatus(ETileGameStatus::CAN_CAPTURE);
 		}

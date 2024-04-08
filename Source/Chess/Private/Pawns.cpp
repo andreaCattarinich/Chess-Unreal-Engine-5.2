@@ -41,7 +41,7 @@ TArray<FVector2D> APawns::GetForwardMoves()
     };
     
     // Condition that change white -> black moves
-    if (GetOwner() == 1)
+    if (GetPieceOwner() == 1)
     {
         for (FVector2D& Direction : StandardDirections)
         {
@@ -62,11 +62,11 @@ TArray<FVector2D> APawns::GetForwardMoves()
 
             if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
             {
-                if (GetOwner() == 0 && PawnPosition.X != 1)
+                if (GetPieceOwner() == 0 && PawnPosition.X != 1)
                 {
                     bCanMoveUp = false;
                 }
-                else if (GetOwner() == 1 && PawnPosition.X != GameMode->GField->Size - 2)
+                else if (GetPieceOwner() == 1 && PawnPosition.X != GameMode->GField->Size - 2)
                 {
                     bCanMoveUp = false;
                 }
@@ -94,7 +94,7 @@ TArray<FVector2D> APawns::GetDiagonalCapturesIfExists()
     };
 
     // Condition that change white -> black moves
-    if (GetOwner() == 1)
+    if (GetPieceOwner() == 1)
     {
         for (FVector2D& Direction : Directions)
         {
@@ -113,7 +113,7 @@ TArray<FVector2D> APawns::GetDiagonalCapturesIfExists()
 
             if (CurrTile->GetTileStatus() == ETileStatus::OCCUPIED)
             {
-                if (CurrTile->GetOwner() == ((GameMode->CurrentPlayer) ^ 1))
+                if (CurrTile->GetTileOwner() == ((GameMode->CurrentPlayer) ^ 1))
                 {
                     DiagonalMoves.Add(Position);
                 }

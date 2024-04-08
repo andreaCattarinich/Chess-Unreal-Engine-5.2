@@ -106,7 +106,7 @@ int32 APiece::GetPieceID() const
 	return PieceID;
 }
 
-int32 APiece::GetOwner()
+int32 APiece::GetPieceOwner()
 {
 	return PlayerOwner;
 }
@@ -157,7 +157,7 @@ TArray<FVector2D> APiece::SearchLegalMoves(
 			
 			if (CurrentTile->GetTileStatus() == ETileStatus::OCCUPIED)
 			{
-				if (CurrentTile->GetOwner() == ((GameMode->CurrentPlayer) ^ 1))
+				if (CurrentTile->GetTileOwner() == ((GameMode->CurrentPlayer) ^ 1))
 				{
 					LegalMoves.Add(Position);
 				}

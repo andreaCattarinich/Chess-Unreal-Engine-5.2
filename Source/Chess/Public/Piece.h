@@ -103,7 +103,7 @@ public:
 	int32 GetPieceID() const;
 
 	// Get the Piece Owner
-	int32 GetOwner();
+	int32 GetPieceOwner();
 	
 	// Get the (x, y) position
 	FVector2D GetGridPosition() const;

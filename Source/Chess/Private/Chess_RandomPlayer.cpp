@@ -90,7 +90,7 @@ void AChess_RandomPlayer::SelectRandomPiece() const
 
 	for (ATile* CurrentTile : GameMode->GField->TileArray)
 	{
-		if (CurrentTile->GetOwner() == PlayerNumber)
+		if (CurrentTile->GetTileOwner() == PlayerNumber)
 		{
 			AIPieces.Add(CurrentTile);
 		}

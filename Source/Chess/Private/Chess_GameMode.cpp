@@ -210,7 +210,7 @@ void AChess_GameMode::UndoMove(const bool bIsGameMove)
 	if(LastMove.IDPieceEaten != -1)
 	{
 		APiece* PieceToRespawn;
-		if((*GField->TileMap.Find(LastMove.Start))->GetOwner() == 0)
+		if((*GField->TileMap.Find(LastMove.Start))->GetTileOwner() == 0)
 		{
 			PieceToRespawn = BPiecesKilled.Pop(); 
 		}
@@ -220,7 +220,7 @@ void AChess_GameMode::UndoMove(const bool bIsGameMove)
 		}
 
 		(*GField->TileMap.Find(LastMove.End))->SetTileStatus(
-			PieceToRespawn->GetOwner(),
+			PieceToRespawn->GetPieceOwner(),
 			ETileStatus::OCCUPIED,
 			PieceToRespawn
 			);
@@ -233,7 +233,7 @@ void AChess_GameMode::UndoMove(const bool bIsGameMove)
 void AChess_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D End) const
 {
 	ATile*	StartTile	= *GField->TileMap.Find(Start);
-	const int32	StartOwner	= StartTile->GetOwner();
+	const int32	StartOwner	= StartTile->GetTileOwner();
 	APiece*	Piece		= StartTile->GetPiece();
 	Piece->SetGridPosition(End.X, End.Y);
 	
@@ -248,7 +248,7 @@ int32 AChess_GameMode::CaptureThePieceIfExist(FVector2D End, const bool bIsGamem
 
 	// Se la pedina � dell'avversario,
 	// => La mangio e restituisco il suo ID
-	if (EndTile->GetOwner() == (CurrentPlayer ^ 1))
+	if (EndTile->GetTileOwner() == (CurrentPlayer ^ 1))
 	{
 		return CaptureThePiece(End, bIsGamemove);
 	}
@@ -425,12 +425,12 @@ void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(const FVector2D End, co
 			Piece->SetActorEnableCollision(false);
 
 			APiece* PieceToRespawn = nullptr;
-			(Piece->GetOwner() == 0)
+			(Piece->GetPieceOwner() == 0)
 				? PieceToRespawn = WPiecesKilled.Pop()
 				: PieceToRespawn = BPiecesKilled.Pop();
 
 			(*GField->TileMap.Find(End))->SetTileStatus(
-				PieceToRespawn->GetOwner(),
+				PieceToRespawn->GetPieceOwner(),
 				ETileStatus::OCCUPIED,
 				PieceToRespawn
 			);
@@ -449,7 +449,7 @@ bool AChess_GameMode::IsIllegalMove()
 	// Check for all Pieces if there's at least one illegal move
 	for(const auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == (CurrentPlayer ^ 1))
+		if(CurrentTile->GetTileOwner() == (CurrentPlayer ^ 1))
 		{
 			CurrentPlayer = GetNextPlayer(CurrentPlayer);
 			TArray<FVector2D> EnemyLegalMoves = CurrentTile->GetPiece()->PieceLegalMoves(); 
@@ -480,7 +480,7 @@ bool AChess_GameMode::HasEnemyLegalMoves(const int32 Player)
 {
 	for(const auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == (Player ^ 1))
+		if(CurrentTile->GetTileOwner() == (Player ^ 1))
 		{
 			GField->SetSelectedTile(CurrentTile->GetGridPosition());
 
@@ -504,7 +504,7 @@ bool AChess_GameMode::IsCheckMate(const int32 Player, const bool bIsGameMove)
 {
 	for(const auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == Player)
+		if(CurrentTile->GetTileOwner() == Player)
 		{
 			GField->SetSelectedTile(CurrentTile->GetGridPosition());
 
@@ -543,7 +543,7 @@ bool AChess_GameMode::IsWinMove(const int32 Player)
 {
 	for(const auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == (Player ^ 1))
+		if(CurrentTile->GetTileOwner() == (Player ^ 1))
 		{
 			GField->SetSelectedTile(CurrentTile->GetGridPosition());
 
@@ -597,7 +597,7 @@ void AChess_GameMode::PrepareReset()
 {
 	for(auto& CurrentTile : GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() != -1)
+		if(CurrentTile->GetTileOwner() != -1)
 		{
 			APiece* CurrentPiece = CurrentTile->GetPiece();
 			GField->OnResetEvent.AddDynamic(CurrentPiece, &APiece::SelfDestroy);			

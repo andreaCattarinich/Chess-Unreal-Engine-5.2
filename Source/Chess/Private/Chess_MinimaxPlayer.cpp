@@ -170,7 +170,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
 			// CERCO SOLO I PEZZI DEL MAXIMIZER
-			if (CurrentTile->GetOwner() != 1)
+			if (CurrentTile->GetTileOwner() != 1)
 			{
 				continue;
 			}
@@ -225,7 +225,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
-			if(CurrentTile->GetOwner() != 0)
+			if(CurrentTile->GetTileOwner() != 0)
 			{
 				continue;
 			}
@@ -292,7 +292,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
 			// CERCO SOLO I PEZZI DEL MAXIMIZER
-			if (CurrentTile->GetOwner() != 1)
+			if (CurrentTile->GetTileOwner() != 1)
 			{
 				continue;
 			}
@@ -355,7 +355,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int
 
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
-			if(CurrentTile->GetOwner() != 0)
+			if(CurrentTile->GetTileOwner() != 0)
 			{
 				continue;
 			}
@@ -423,11 +423,11 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	int WhiteScore = 0;
 	for(const auto& CurrentTile : GameMode->GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == 1)
+		if(CurrentTile->GetTileOwner() == 1)
 		{
 			BlackScore += CurrentTile->GetPiece()->GetPieceValue(); 
 		}
-		else if(CurrentTile->GetOwner() == 0)
+		else if(CurrentTile->GetTileOwner() == 0)
 		{
 			WhiteScore += CurrentTile->GetPiece()->GetPieceValue();
 		}
@@ -467,11 +467,6 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 	}
 }
 
-int32 AChess_MinimaxPlayer::EvaluateChessGridFromPosition(TArray<ATile*>& Board, bool bIsMax) const
-{
-	
-}
-
 void AChess_MinimaxPlayer::DecideMove()
 {
 	SelectRandomPiece();
@@ -492,7 +487,7 @@ void AChess_MinimaxPlayer::SelectRandomPiece() const
 
 	for (ATile* CurrentTile : GameMode->GField->TileArray)
 	{
-		if (CurrentTile->GetOwner() == PlayerNumber)
+		if (CurrentTile->GetTileOwner() == PlayerNumber)
 		{
 			AIPieces.Add(CurrentTile);
 		}

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -16,16 +16,15 @@ enum class ETileStatus : uint8
 	OCCUPIED    UMETA(DisplayName = "Occupied"),
 };
 
-// TileGameStatus represent the status in the game
+// TileGameStatus represents the various statuses a tile can have in the chess game
 UENUM()
 enum class ETileGameStatus : uint8
 {
 	FREE		UMETA(DisplayName = "Free"),		// Nothing happened
-	SELECTED	UMETA(DisplayName = "Selected"),	// Selected by the Player (or AI)
-	LEGAL_MOVE	UMETA(DisplayName = "Legal Move"),	// Tile is legal
-	CAN_CAPTURE UMETA(DisplayName = "Can Capture"),	// Tile can eat the enemy
+	SELECTED	UMETA(DisplayName = "Selected"),	// Selected by the Player (or AI) for movement
+	LEGAL_MOVE	UMETA(DisplayName = "Legal Move"),	// Tile is legal move for the selected piece
+	CAN_CAPTURE UMETA(DisplayName = "Can Capture"),	// Tile contains an enemy piece that can be captured
 };
-
 
 UCLASS()
 class CHESS_API ATile : public AActor
@@ -68,22 +67,24 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Property")
 		int32 PlayerOwner;
 
+	// Keeps tack of the Piece currently occupying the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game Property")
 		APiece* Piece;
 
-	
 public:
+	// UI tile Number identifier
 	UPROPERTY(VisibleAnywhere)
-	class UTextRenderComponent* TileTextNumber;
+		class UTextRenderComponent* TileTextNumber;
+
+	// UI tile Letter identifier
+	UPROPERTY(VisibleAnywhere)
+		class UTextRenderComponent* TileTextLetter;
+
+
 	
-	UPROPERTY(VisibleAnywhere)
-	class UTextRenderComponent* TileTextLetter;
 	// ************ SETTERS ************	
 	// Set the player owner and the status of a tile
-	void SetTileStatus(
-		const int32 TileOwner,
-		const ETileStatus TileStatus,
-		APiece* TilePiece);
+	void SetTileStatus(const int32 TileOwner, const ETileStatus TileStatus, APiece* TilePiece);
 
 	// Set the Tile's Game Status and if is legal or not
 	void SetTileGameStatus(ETileGameStatus NewTileGameStatus);
@@ -92,7 +93,7 @@ public:
 	void SetGridPosition(const double InX, const double InY);
 	
 	// Set the color of a Tile
-	void SetTileMaterial();
+	void SetTileMaterial() const;
 	
 
 	
@@ -110,13 +111,17 @@ public:
 	FVector2D GetGridPosition() const;
 
 	// Get the tile owner
-	int32 GetOwner();
+	int32 GetTileOwner() const;
 
+	// Get the piece on the tile
 	APiece* GetPiece() const;
 
+
+	
 	// ************ METHODS ************
-	FString GetTileMaterialPath();
+	// Returns the material path for the colors used in the game tiles
+	FString GetTileMaterialPath() const;
 
+	// Converts the game status to a string representation.
 	FString GameStatusToString() const;
-
 };

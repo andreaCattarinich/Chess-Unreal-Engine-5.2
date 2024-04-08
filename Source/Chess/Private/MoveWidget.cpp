@@ -25,9 +25,9 @@ void UMoveWidget::SetData(const FMove& Move)
 	        for (const auto& CurrentTile : GameMode->GField->TileArray)
 	        {
 	            const APiece* CurrentPiece = CurrentTile->GetPiece();
-	            const int32 CurrOwner = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
+	            const int32 CurrOwner = (*GameMode->GField->TileMap.Find(Move.End))->GetTileOwner();
 	            
-	            if (CurrentTile->GetOwner() == CurrOwner &&
+	            if (CurrentTile->GetTileOwner() == CurrOwner &&
 	                CurrentPiece->GetPieceType() == CurrentPieceType &&
 	                CurrentPiece->GetPieceID() != Move.IDPiece)
 	            {
@@ -84,7 +84,7 @@ void UMoveWidget::SetData(const FMove& Move)
 
 	StringMove += PositionToStringMove(Move.End);
 	/*
-	int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
+	int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetTileOwner();
 
 	if(GameMode->IsWinMove(Player))
 	{
@@ -92,10 +92,10 @@ void UMoveWidget::SetData(const FMove& Move)
 	}
 	*/
 	bool bIsPatta = true;
-	const int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetOwner();
+	const int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetTileOwner();
 	for(const auto& CurrentTile : GameMode->GField->TileArray)
 	{
-		if(CurrentTile->GetOwner() == Player)
+		if(CurrentTile->GetTileOwner() == Player)
 		{
 			GameMode->GField->SetSelectedTile(CurrentTile->GetGridPosition());
 
@@ -227,11 +227,11 @@ void UMoveWidget::OnBtnClick()
 	// => vado indietro fino alla mossa successiva bianca
 	if (NumberMove % 2 == 0)
 	{
-		index = NumberMove + 1;
+		index = NumberMove;
 	}
 	else
 	{
-		index = NumberMove;
+		index = NumberMove + 1;
 	}
 
 	while (GameMode->Moves.Num() > index)
