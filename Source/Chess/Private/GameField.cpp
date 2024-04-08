@@ -1,6 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
+// Copyright © 2024 Andrea Cattarinich
 
 #include "GameField.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,9 +8,9 @@
 #include "Knight.h"
 #include "Bishop.h"
 #include "King.h"
-#include "MovesPanel.h"
 #include "Queen.h"
-#include "..\Public\Chess_GameMode.h"
+#include "MovesPanel.h"
+#include "Chess_GameMode.h"
 #include "Components/TextRenderComponent.h"
 
 // Sets default values
@@ -21,18 +19,19 @@ AGameField::AGameField()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	Size = 8;						// Size of the field (8x8)
-	TileSize = 150;					// Tile dimension
-	CellPadding = 0;				// Tile padding dimension
+	Size = 8;
+	TileSize = 150;
+	CellPadding = 0;
 	NormalizedCellPadding = 0.0f;
 	PieceScalePercentage = 100;
+	ListOfMovesWidgetRef = nullptr;
 }
 
 void AGameField::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 	
-	// Normalized tilepadding
+	// Normalized tile padding
 	NormalizedCellPadding = FMath::RoundToDouble(((TileSize + CellPadding) / TileSize) * 100) / 100;
 }
 
@@ -45,15 +44,9 @@ void AGameField::BeginPlay()
 	{
 		ListOfMovesWidgetRef->AddToViewport(0);
 	}
-
-
-
+	
 	GenerateField();
 	GeneratePieces();
-	
-	//GeneratePiecesForMinimaxTest();
-	//GeneratePiecesForPromotion();
-	//GeneratePiecesForPromotion2();
 }
 
 void AGameField::SetSelectedTile(const FVector2D Position)
@@ -61,7 +54,7 @@ void AGameField::SetSelectedTile(const FVector2D Position)
 	SelectedTile = Position;
 }
 
-void AGameField::SetLegalMoves(TArray<FVector2D> NewLegalMoves)
+void AGameField::SetLegalMoves(const TArray<FVector2D>& NewLegalMoves)
 {
 	LegalMovesArray = NewLegalMoves;
 }
@@ -74,16 +67,6 @@ FVector2D AGameField::GetPosition(const FHitResult& Hit)
 TArray<ATile*>& AGameField::GetTileArray()
 {
 	return TileArray;
-}
-
-TArray<ATile*>& AGameField::GetWhiteTileArray()
-{
-	return WhiteTileArray;
-}
-
-TArray<ATile*>& AGameField::GetBlackTileArray()
-{
-	return BlackTileArray;
 }
 
 TArray<FVector2D> AGameField::GetLegalMoves()
@@ -110,7 +93,6 @@ FVector2D AGameField::GetXYPositionByRelativeLocation(const FVector& Location) c
 {
 	const double x = Location[0] / (TileSize * NormalizedCellPadding);
 	const double y = Location[1] / (TileSize * NormalizedCellPadding);
-	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("x=%f,y=%f"), x, y));
 	return FVector2D(x, y);
 }
 
@@ -118,19 +100,14 @@ FVector2D AGameField::GetKingPosition(const int32 Player) const
 {
 	for (auto& CurrentTile : TileArray)
 	{
-		if(CurrentTile->GetTileOwner() == Player)
+		if(CurrentTile->GetTileOwner() == Player && CurrentTile->GetPiece()->GetPieceType() == EPieceType::KING)
 		{
-			if(CurrentTile->GetPiece()->GetPieceType() == EPieceType::KING)
-			{
-				return CurrentTile->GetGridPosition();
-			}
+			return CurrentTile->GetGridPosition();
 		}
 	}
 	
 	return FVector2D(-1, -1);
 }
-
-
 
 void AGameField::GenerateField()
 {
@@ -150,50 +127,51 @@ void AGameField::GenerateField()
 			const float TileScale = TileSize / 100;
 			CurrentTile->SetActorScale3D(FVector(TileScale, TileScale, 0.2));
 			CurrentTile->SetGridPosition(x, y);
-
-			/************ CODICE PER GESTIRE LA STAMPA DEI NUMERI/LETTERE A BORDO PARTITA ************/
-			// TODO: eventualmente mettere queste linee di codice dentro a un metodo
-			CurrentTile->TileTextNumber->SetRelativeLocation(FVector(Location.X + (TileSize / 6), Location.Y - (TileSize * 5/12), 5.0f));
-			CurrentTile->TileTextNumber->SetRelativeRotation(FRotator(90,0,180));
-			CurrentTile->TileTextNumber->SetXScale(TileSize/80);
-			CurrentTile->TileTextNumber->SetYScale(TileSize/80);
-
-			if((x+y) % 2 == 0)
-			{
-				CurrentTile->TileTextNumber->SetTextRenderColor(FColor(255,255,255,255));	
-				CurrentTile->TileTextLetter->SetTextRenderColor(FColor(255,255,255,255));	
-			}
-			else
-			{
-				CurrentTile->TileTextNumber->SetTextRenderColor(FColor(0,0,0,255));
-				CurrentTile->TileTextLetter->SetTextRenderColor(FColor(0,0,0,255));
-			}
-
-			CurrentTile->TileTextNumber->SetText(FText::FromString(TEXT("")));
-			CurrentTile->TileTextLetter->SetText(FText::FromString(TEXT("")));
-
 			
-				
-			CurrentTile->TileTextLetter->SetRelativeLocation(FVector(Location.X - (TileSize/2), Location.Y + (TileSize * 35/120), 5.0f));
-			CurrentTile->TileTextLetter->SetRelativeRotation(FRotator(90,0,180));
-			CurrentTile->TileTextLetter->SetXScale(TileSize/80);
-			CurrentTile->TileTextLetter->SetYScale(TileSize/80);
-
-
-			if(y == 0)
-			{
-				CurrentTile->TileTextNumber->SetText(FText::FromString(FString::Printf(TEXT("%c"), '1' + x)));
-			}
-			if(x == 0)
-			{
-				CurrentTile->TileTextLetter->SetText(FText::FromString(FString::Printf(TEXT("%c"), 'a' + y)));
-			}
-			
-			/************ FINE - CODICE PER GESTIRE LA STAMPA DEI NUMERI/LETTERE A BORDO PARTITA ************/ 
-
 			TileArray.Add(CurrentTile);
 			TileMap.Add(FVector2D(x, y), CurrentTile);
+			
+			GenerateLettersAndNumbers(x, y);
 		}
+	}
+}
+
+void AGameField::GenerateLettersAndNumbers(const int32 X, const int32 Y)
+{
+	const ATile* CurrentTile = *TileMap.Find(FVector2D(X, Y));
+	const FVector Location = GetRelativeLocationByXYPosition(X, Y);
+
+	CurrentTile->TileTextNumber->SetRelativeLocation(FVector(Location.X + (TileSize / 6), Location.Y - (TileSize * 5 / 12), 5.0f));
+	CurrentTile->TileTextNumber->SetRelativeRotation(FRotator(90, 0, 180));
+	CurrentTile->TileTextNumber->SetXScale(TileSize / 80);
+	CurrentTile->TileTextNumber->SetYScale(TileSize / 80);
+
+	if ((X + Y) % 2 == 0)
+	{
+		CurrentTile->TileTextNumber->SetTextRenderColor(FColor(255, 255, 255, 255));
+		CurrentTile->TileTextLetter->SetTextRenderColor(FColor(255, 255, 255, 255));
+	}
+	else
+	{
+		CurrentTile->TileTextNumber->SetTextRenderColor(FColor(0, 0, 0, 255));
+		CurrentTile->TileTextLetter->SetTextRenderColor(FColor(0, 0, 0, 255));
+	}
+
+	CurrentTile->TileTextNumber->SetText(FText::FromString(TEXT("")));
+	CurrentTile->TileTextLetter->SetText(FText::FromString(TEXT("")));
+
+	CurrentTile->TileTextLetter->SetRelativeLocation(FVector(Location.X - (TileSize / 2), Location.Y + (TileSize * 35 / 120), 5.0f));
+	CurrentTile->TileTextLetter->SetRelativeRotation(FRotator(90, 0, 180));
+	CurrentTile->TileTextLetter->SetXScale(TileSize / 80);
+	CurrentTile->TileTextLetter->SetYScale(TileSize / 80);
+
+	if (Y == 0)
+	{
+		CurrentTile->TileTextNumber->SetText(FText::FromString(FString::Printf(TEXT("%c"), '1' + X)));
+	}
+	if (X == 0)
+	{
+		CurrentTile->TileTextLetter->SetText(FText::FromString(FString::Printf(TEXT("%c"), 'a' + Y)));
 	}
 }
 
@@ -268,25 +246,6 @@ void AGameField::GeneratePiecesForPromotion()
 
 }
 
-void AGameField::GeneratePiecesForPromotion2()
-{
-	GeneratePiece<AKing>(FVector2D(0, 0), 0);
-	GeneratePiece<APawns>(FVector2D(1, 0), 0);
-	GeneratePiece<APawns>(FVector2D(1, 1), 0);
-	GeneratePiece<APawns>(FVector2D(0, 1), 0);
-	GeneratePiece<ABishop>(FVector2D(2, 2), 0);
-	GeneratePiece<ABishop>(FVector2D(2, 1), 0);
-
-	//GeneratePiece<ARook>(FVector2D(Size - 1, 0), 1);
-	//GeneratePiece<AKnight>(FVector2D(Size - 1, 1), 1);
-	GeneratePiece<ABishop>(FVector2D(Size - 1, 2), 1);
-	//GeneratePiece<AQueen>(FVector2D(Size - 1, 3), 1);
-	GeneratePiece<AKing>(FVector2D(Size - 1, 4), 1);
-	GeneratePiece<APawns>(FVector2D(2, 7), 1);
-
-
-}
-
 template<typename T>
 void AGameField::GeneratePiece(FVector2D Position, int32 PlayerOwner)
 {
@@ -336,9 +295,6 @@ void AGameField::ResetGameStatusField()
 		{
 			CurrentTile->SetTileGameStatus(ETileGameStatus::FREE);
 		}
-
-		// TODO: togliere
-		//CurrentTile->SetTileMaterial();
 	}
 
 	SetSelectedTile(FVector2D(-1, -1));
@@ -346,8 +302,8 @@ void AGameField::ResetGameStatusField()
 
 TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 {
-
-	// If the tile passed as an argument does not belong (non appartiene) to any player
+	// If the tile passed as an argument does not belong to any player
+	// or is invalid position, the function return 0 legal moves
 	if(!IsValidPosition(Position) || (*TileMap.Find(Position))->GetTileOwner() == NOT_ASSIGNED)
 	{
 		return TArray<FVector2D>();
@@ -361,13 +317,15 @@ TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 
 	for (int32 index = PossibleMovesOfPiece.Num() - 1; index >= 0; --index)
 	{
-		// PossibleMovesOfPiece[index] contienere la posizione della mossa possibile i-esima
-		
+		// PossibleMovesOfPiece[index] contains the position of the i-th possible move.
+
+		/*** DO THE MOVE ***/
 		GameMode->DoMove(PossibleMovesOfPiece[index], false);
-		
+
+		// Remove the Move if is illegal
 		if (GameMode->IsIllegalMove())
 		{	
-			PossibleMovesOfPiece.RemoveAt(index); // REMOVE IF IS ILLEGAL
+			PossibleMovesOfPiece.RemoveAt(index);
 		}
 
 		/*** UNDO THE MOVE ***/
@@ -377,14 +335,14 @@ TArray<FVector2D> AGameField::LegalMoves(const FVector2D Position) const
 	return PossibleMovesOfPiece;
 }
 
-TArray<FVector2D> AGameField::PossibleMoves(FVector2D Position) const
+TArray<FVector2D> AGameField::PossibleMoves(const FVector2D Position) const
 {
 	return (*TileMap.Find(Position))->GetPiece()->PieceLegalMoves();
 }
 
 void AGameField::ShowLegalMovesInTheField()
 {
-	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
+	const AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	for (const FVector2D& Position : LegalMovesArray)
 	{
@@ -403,9 +361,6 @@ void AGameField::ShowLegalMovesInTheField()
 	}
 }
 
-
-
-// TODO: implementare il RESET
 void AGameField::ResetField()
 {
 	
@@ -417,10 +372,6 @@ void AGameField::ResetField()
 	
 	// send broadcast event to registered objects 
 	OnResetEvent.Broadcast();
-	
-	// TODO: devo resettare tutti gli attributi
-	//	Es: TileMap, PieceMap, SelectedTile etc... 
-	//	E devo ri-spawnare tutti i pezzi.
 	
 	GeneratePieces();
 	ResetGameStatusField();
@@ -438,6 +389,6 @@ void AGameField::ResetField()
 	
 	GameMode->IsGameOver = false;
 	GameMode->MoveCounter = 0;
-	GameMode->ChoosePlayerAndStartGame();
 	
+	GameMode->ChoosePlayerAndStartGame();
 }

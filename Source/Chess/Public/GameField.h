@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -28,27 +28,24 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	
 
 	// ************ ATTRIBUTES ************
-	static const int32 NOT_ASSIGNED = -1;
+	static constexpr int32 NOT_ASSIGNED = -1;
 	
 	// Keeps track of Tiles
 	UPROPERTY(Transient)
 		TArray<ATile*> TileArray;
-	
-	UPROPERTY(Transient)
-		TArray<ATile*> WhiteTileArray;
-	
-	UPROPERTY(Transient)
-		TArray<ATile*> BlackTileArray;
 
 	// Given a position returns a Tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		TMap<FVector2D, ATile*> TileMap;
-	
+
+	// Given an ID returns a Piece
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		TMap<int32, APiece*> PieceMap;
-	
+
+	// Tile (or Piece) selected in the game
 	UPROPERTY(EditDefaultsOnly)
 		FVector2D SelectedTile;
 
@@ -58,28 +55,27 @@ public:
 
 	// Size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 Size;
+		int32 Size;
 
 	// Tile size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float TileSize;
+		float TileSize;
 
 	// Tile padding dimension
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	float CellPadding;
+		float CellPadding;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float NormalizedCellPadding;
+		float NormalizedCellPadding;
 
+	// Indicates the size of the piece relative to the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float PieceScalePercentage;
+		float PieceScalePercentage;
 	
 	// BlueprintAssignable Usable with Multicast Delegates only. Exposes the property for assigning in Blueprints.
 	// declare a variable of type FOnReset (delegate)
 	UPROPERTY(BlueprintAssignable)
 		FOnReset OnResetEvent;
-
-	
 
 	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
@@ -89,17 +85,21 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ATile> TileClassLight;
 
+	// It's used for spawning the widget Panel for moves
+	UPROPERTY(EditAnyWhere)
+		UUserWidget* ListOfMovesWidgetRef;
+
+
 	
-
-
-
-
 	// ************ SETTERS ************
-	// Set the Tile that is Selected from the Player
+	// Set the Tile that is Selected from the Player (or AI)
 	void SetSelectedTile(FVector2D Position);
 
-	void SetLegalMoves(TArray<FVector2D> NewLegalMoves);
+	// Set LegalMovesArray
+	void SetLegalMoves(const TArray<FVector2D>& NewLegalMoves);
 
+
+	
 	// ************ GETTERS ************
 	// Return a (x,y) position given a hit (click) on a field tile
 	FVector2D GetPosition(const FHitResult& Hit); // TODO: controllare se la uso
@@ -107,22 +107,14 @@ public:
 	// Return the array of Tile Pointers
 	TArray<ATile*>& GetTileArray();
 
-	// Return the array of Black Tile Pointers
-	TArray<ATile*>& GetWhiteTileArray();
-
-	// Return the array of Black Tile Pointers
-	TArray<ATile*>& GetBlackTileArray();
-
 	// Return Tile Map [use with TileMap.Find(FVector2D ...)]
 	TMap<FVector2D, ATile*> GetTileMap();
 		
-	// Return Position of Active (Selected) Tile
+	// Return Position of Selected (Active) Tile
 	FVector2D GetSelectedTile() const;
 	
 	// Return the array of Legal Moves' Position
 	TArray<FVector2D> GetLegalMoves();
-
-
 	
 	// Return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
@@ -130,6 +122,7 @@ public:
 	// Return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
+	// Return white or black King Position
 	FVector2D GetKingPosition(int32 Player) const;
 
 
@@ -138,54 +131,39 @@ public:
 	// Generate an empty game field
 	void GenerateField();
 
+	// Generate Letters and Numbers on the first row and first column of the GameField
+	void GenerateLettersAndNumbers(int32 X, int32 Y);
+
 	// Generic function to Generate Pieces in the field
 	void GeneratePieces();
+	
+	// TODO: cancellare
 	void GeneratePiecesForMinimaxTest();
 	void GeneratePiecesForPromotion();
-	void GeneratePiecesForPromotion2();
 
 	// Specific function to Generate a particular Piece
 	template<typename T>
 	void GeneratePiece(FVector2D Position, int32 Player);
 	 
 	// Checking if is a valid field position
-	inline bool IsValidPosition(const FVector2D Position) const; // TODO: da implementare
+	inline bool IsValidPosition(const FVector2D Position) const;
 
+	// Sets select Tile in the game
 	void SelectTile(const FVector2D Position);
 
-	/*
-		TODO: ho cambiato il nome da ResetColorField()
-		a ResetGameStatusColorField()
-
-		Il nome è corretto quando si tratta di resettare i colori delle Tile.
-		Ma non è coerente quando la GAMEMODE e il MINIMAX esegue in background
-		le operazioni di DO e UNDO.
-
-		Tutta via, il cambio di colore non viene visualizzato runtime.
-		Non so il motivo. Probabilmente, sono calcoli sufficientemente veloci
-	 */
+	// Reset tile colors
 	void ResetGameStatusField();
-
-
-	// Restituisci le mosse del pezzo la cui posizione
-	// è passata per parametro
+	
+	// Returns the legal moves for the piece at the given position
 	TArray<FVector2D> LegalMoves(FVector2D Position) const;
+
+	// Returns the possible moves without considering illegal moves
 	TArray<FVector2D> PossibleMoves(FVector2D Position) const;	
 
-	// First you have to set LegalMovesArray, then use this function to show
-	// legal moves in the game board
+	// First you have to set LegalMovesArray, then use this function to show legal moves in the game board
 	void ShowLegalMovesInTheField();
-
 	
-	// TODO: to implement
 	// Remove all Pieces from the field
 	UFUNCTION(BlueprintCallable) 
-	void ResetField();
-
-
-	/******** LIST OF MOVES **********/
-public:
-	UPROPERTY(EditAnyWhere)
-		UUserWidget* ListOfMovesWidgetRef;
-	/******** END LIST OF MOVES **********/
+		void ResetField();
 };
