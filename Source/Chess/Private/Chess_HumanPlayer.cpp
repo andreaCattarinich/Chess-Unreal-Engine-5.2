@@ -1,6 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-//#include "..\Public\Chess_HumanPlayer.h"
+// Copyright © 2024 Andrea Cattarinich
 
 #include "Chess_HumanPlayer.h"
 #include "GameField.h"
@@ -18,16 +16,16 @@ AChess_HumanPlayer::AChess_HumanPlayer()
 	// Set this pawn to be controlled by the lowest-numbered player
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	// create a camera component
+	// Create a camera component
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
-	//set the camera as RootComponent
+	// Set the camera as RootComponent
 	SetRootComponent(Camera);
 
-	// get the game instance reference
+	// Get the game instance reference
 	GameInstance = Cast<UChess_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	
-	// default init values
+	// Default init values
 	PlayerNumber = -1;
 }
 
@@ -35,6 +33,7 @@ AChess_HumanPlayer::AChess_HumanPlayer()
 void AChess_HumanPlayer::BeginPlay()
 {
 	Super::BeginPlay();
+	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
 // Called every frame
@@ -77,7 +76,7 @@ void AChess_HumanPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 void AChess_HumanPlayer::OnClick()
 {
-	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
+	// Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
 
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
@@ -87,81 +86,67 @@ void AChess_HumanPlayer::OnClick()
 	{
 		return;
 	}
-
-	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
-
-	// SE CLICCO SU UNA TILE
-	if (ATile* ClickedTile = Cast<ATile>(Hit.GetActor()))
+	
+	// If human clicks on a Tile
+	if (const ATile* ClickedTile = Cast<ATile>(Hit.GetActor()))
 	{
-		HandleTileClick(GameMode, ClickedTile);
+		HandleTileClick(ClickedTile);
 	}
-	// SE CLICCO SU UN PEZZO
-	else if (APiece* ClickedPiece = Cast<APiece>(Hit.GetActor()))
+	
+	// If human clicks on a Tile
+	else if (const APiece* ClickedPiece = Cast<APiece>(Hit.GetActor()))
 	{
-		HandlePieceClick(GameMode, ClickedPiece);
+		HandlePieceClick(ClickedPiece);
 	}
 }
 
-void AChess_HumanPlayer::HandleTileClick(
-	AChess_GameMode* GameMode,
-	ATile* ClickedTile
-)
+void AChess_HumanPlayer::HandleTileClick(const ATile* ClickedTile)
 {
-	// SE CLICCO SU UNA TILE CHE MI APPARTIENE
-	// => Setto la tile come attiva (selezionata)
+	// If human clicks on a Tile that belongs to him
+	// => Set Tile selected (active)
 	if (ClickedTile->GetTileOwner() == PlayerNumber)
 	{
-		FVector2D Position = ClickedTile->GetGridPosition();
+		const FVector2D Position = ClickedTile->GetGridPosition();
 		GameMode->SetSelectedTile(Position);
 	}
 
-	// SE LA TILE CHE HO CLICCATO E' UNA MOSSA LEGALE
-	// => Eseguo la mossa
+	// If the Tile clicked is legal
+	// => Execute the move
 	if (ClickedTile->IsLegalTile())
 	{
-		/******* ESEGUI LA MOSSA (solo spostamento) *******/
-		ExecuteTheMoveForHumanPlayer(GameMode, ClickedTile);
+		ExecuteTheMoveForHumanPlayer(ClickedTile);
 	}
 }
 
-void AChess_HumanPlayer::HandlePieceClick(
-	AChess_GameMode* GameMode,
-	APiece* ClickedPiece
-)
+void AChess_HumanPlayer::HandlePieceClick(const APiece* ClickedPiece)
 {
-	// SE IL PEZZO DELLO HUMAN PLAYER
+	// If the Piece clicked belong to the player
 	if (ClickedPiece->GetPieceOwner() == PlayerNumber)
 	{
-		// SE IL PEZZO APPENA PREMUTO E' QUELLO ATTIVO
-		// => Allora disattivo la Tile attiva (selezionata)
+		// If the Piece clicked is active
+		// => De-activate active Tile
 		if (ClickedPiece->GetGridPosition() == GameMode->GField->GetSelectedTile())
 		{
 			GameMode->GField->ResetGameStatusField();
 		}
-		else // Altrimenti setto la tile come attiva (selezionata)
+		else // Set Tile selected (active)
 		{
 			GameMode->SetSelectedTile(ClickedPiece->GetGridPosition());
 		}
 	}
 	else
-	{	// SE IL PEZZO E' DELL'AVVERSARIO ED E' UNA MOSSA LEGALE
-		// => Allora mangia la pedina avversaria
-		ATile* ClickedTile = *GameMode->GField->TileMap.Find(ClickedPiece->GetGridPosition());
+	{	// If the enemy piece is legal move
+		// => Eat the piece
+		const ATile* ClickedTile = *GameMode->GField->TileMap.Find(ClickedPiece->GetGridPosition());
 		if (ClickedTile->IsLegalTile())
 		{
-			/******* ESEGUI LA MOSSA (mangia una pedina) *******/
-			ExecuteTheMoveForHumanPlayer(GameMode, ClickedTile);
+			ExecuteTheMoveForHumanPlayer(ClickedTile);
 		}
 	}
 }
 
-void AChess_HumanPlayer::ExecuteTheMoveForHumanPlayer(
-	AChess_GameMode* GameMode,
-	ATile* EndTile
-)
+void AChess_HumanPlayer::ExecuteTheMoveForHumanPlayer(const ATile* EndTile)
 {
-	// TODO: rinominare questa funzione
-	//GameMode->Gesture(PlayerNumber, EndTile, true);
 	IsMyTurn = false;
 	GameMode->DoMove(EndTile->GetGridPosition(), true);
 }

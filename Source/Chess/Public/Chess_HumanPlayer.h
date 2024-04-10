@@ -1,9 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
+
 #include "Chess_GameMode.h"
-
-
 #include "Chess_GameInstance.h"
 #include "Chess_PlayerInterface.h"
 
@@ -38,12 +37,14 @@ public:
 
 
 	// ************ ATTRIBUTES ************	
-	// Camera component attacched to player pawn
+	// Camera component attached to player pawn
 	UCameraComponent* Camera;
 
 	// Game instance reference
 	UChess_GameInstance* GameInstance;
 
+	// Game Mode reference
+	AChess_GameMode* GameMode;
 
 
 	// ************ SETTERS ************	
@@ -65,24 +66,14 @@ public:
 
 	// called on left mouse click (binding)
 	UFUNCTION()
-	void OnClick();
+		void OnClick();
 
 	// Manages Click on Tile
-	void HandleTileClick(
-		AChess_GameMode* GameMode,
-		ATile* ClickedTile
-	);
+	void HandleTileClick(const ATile* ClickedTile);
 
 	// Manages Click on Piece
-	void HandlePieceClick(
-		AChess_GameMode* GameMode,
-		APiece* ClickedPiece
-	);
+	void HandlePieceClick(const APiece* ClickedPiece);
 
-
-	void ExecuteTheMoveForHumanPlayer(
-		AChess_GameMode* GameMode,
-		ATile* EndTile
-		);
-
+	// Execute the move
+	void ExecuteTheMoveForHumanPlayer(const ATile* EndTile);
 };
