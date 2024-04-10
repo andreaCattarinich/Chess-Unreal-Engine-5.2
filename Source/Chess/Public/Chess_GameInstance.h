@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
-/*** Oggetto persistente per tutta la durata del gioco ***/
+/*** Persistent object for the duration of the game ***/
 #pragma once
 
 #include "CoreMinimal.h"
@@ -26,26 +26,31 @@ public:
 	UPROPERTY(EditAnywhere)
 		FString CurrentTurnMessage = "Current Player";
 
+	// Difficulty: random, minimax
 	UPROPERTY(BlueprintReadWrite, Category = "Difficulty")
 	int32 Difficulty;
 
+
+	
 	// ************ SETTERS ************ 
 	// Set the turn message
 	UFUNCTION(BlueprintCallable)
 		void SetTurnMessage(FString Message);
 
+	// Set the difficulty
 	UFUNCTION(BlueprintCallable)
-	void SetOpponent(const int32 SelectedOpp);
+		void SetOpponent(const int32 SelectedOpp);
 
 
+	
 	// ************ GETTERS ************
 	// Get the score for human player
 	UFUNCTION(BlueprintCallable)
-		int32 GetScoreHumanPlayer();
+		int32 GetScoreHumanPlayer() const;
 
 	// Get the score for AI player
 	UFUNCTION(BlueprintCallable)
-		int32 GetScoreAiPlayer();
+		int32 GetScoreAiPlayer() const;
 
 	// Get the current turn message
 	UFUNCTION(BlueprintCallable)

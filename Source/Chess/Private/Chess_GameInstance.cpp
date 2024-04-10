@@ -1,7 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-/*** Oggetto persistente per tutta la durata del gioco ***/
-//#include "..\Public\Chess_GameInstance.h"
+// Copyright © 2024 Andrea Cattarinich
 
 #include "Chess_GameInstance.h"
 
@@ -15,12 +12,12 @@ void UChess_GameInstance::SetOpponent(const int32 SelectedOpp)
 	Difficulty = SelectedOpp;
 }
 
-int32 UChess_GameInstance::GetScoreHumanPlayer()
+int32 UChess_GameInstance::GetScoreHumanPlayer() const
 {
 	return ScoreHumanPlayer;
 }
 
-int32 UChess_GameInstance::GetScoreAiPlayer()
+int32 UChess_GameInstance::GetScoreAiPlayer() const
 {
 	return ScoreAiPlayer;
 }
