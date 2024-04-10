@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #include "Piece.h"
 #include "GameField.h"
@@ -21,8 +21,6 @@ APiece::APiece()
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
 
-	// TODO: a volte non funziona.
-	// La STATICMESH non viene correttamente caricata.
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
 		TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
 
@@ -34,12 +32,9 @@ APiece::APiece()
 	PieceGridPosition = FVector2D(-1, -1);
 	PlayerOwner = -1;
 	PieceID = -100;
-	//PieceType = ??
 	PieceValue = 0;
 	GameMode = nullptr;
 	bIsPromoted = false;
-	NumberMovePromotion = 0;
- 
 }
 
 // Called every frame
@@ -59,7 +54,6 @@ void APiece::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
-	
 }
 
 void APiece::SetPieceID()
@@ -78,7 +72,7 @@ void APiece::SetGridPosition(const double InX, const double InY)
 	PieceGridPosition.Set(InX, InY);
 }
 
-void APiece::SetTexture()
+void APiece::SetTexture() const
 {
 	// W: white
 	// B: black
@@ -106,7 +100,7 @@ int32 APiece::GetPieceID() const
 	return PieceID;
 }
 
-int32 APiece::GetPieceOwner()
+int32 APiece::GetPieceOwner() const
 {
 	return PlayerOwner;
 }
@@ -131,6 +125,11 @@ bool APiece::IsPromoted() const
 	return bIsPromoted;
 }
 
+int32 APiece::GetNumberMovesSincePromotion() const
+{
+	return MovesSincePromotion;
+}
+
 TArray<FVector2D> APiece::PieceLegalMoves()
 {
 	return TArray<FVector2D>();
@@ -153,7 +152,7 @@ TArray<FVector2D> APiece::SearchLegalMoves(
 				break;
 			}
 
-			ATile* CurrentTile = *GameMode->GField->TileMap.Find(Position);
+			const ATile* CurrentTile = *GameMode->GField->TileMap.Find(Position);
 			
 			if (CurrentTile->GetTileStatus() == ETileStatus::OCCUPIED)
 			{
@@ -189,4 +188,14 @@ FString APiece::PieceTypeToString(const EPieceType Type)
 void APiece::SelfDestroy()
 {
 	Destroy();
+}
+
+void APiece::IncreaseNumberMovesSincePromotion()
+{
+	MovesSincePromotion++;
+}
+
+void APiece::DecreaseNumberMovesSincePromotion()
+{
+	MovesSincePromotion--;
 }

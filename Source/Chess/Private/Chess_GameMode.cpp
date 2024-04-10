@@ -176,7 +176,7 @@ void AChess_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove
 	if (Piece->IsPromoted())
 	{
 		// Aggiungo 1 alle mosse eseguite dopo la promozione
-		Piece->MovesSincePromotion++;
+		Piece->IncreaseNumberMovesSincePromotion();
 	}
 
 	const FMove CurrentMove = FMove(Moves.Num() + 1, IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
@@ -407,7 +407,7 @@ void AChess_GameMode::SetPromotionChoice(EPieceType PromotionType)
 	if (Piece->IsPromoted())
 	{
 		// Aggiungo 1 alle mosse eseguite dopo la promozione
-		Piece->MovesSincePromotion++;
+		Piece->IncreaseNumberMovesSincePromotion();
 	}
 
 }
@@ -418,8 +418,8 @@ void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(const FVector2D End, co
 	
 	if (Piece->IsPromoted())
 	{
-		Piece->MovesSincePromotion--;
-		if (Piece->MovesSincePromotion == 0)
+		Piece->DecreaseNumberMovesSincePromotion();
+		if (Piece->GetNumberMovesSincePromotion() == 0)
 		{
 			Piece->SetActorHiddenInGame(true);
 			Piece->SetActorEnableCollision(false);

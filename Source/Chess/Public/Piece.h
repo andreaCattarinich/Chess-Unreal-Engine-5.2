@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -52,35 +52,39 @@ protected:
 	// To track the last used ID
 	static int32 NewPieceID;
 
+	// ID of the Piece
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 PieceID;
+		int32 PieceID;
 
+	// Player Owner (white or black)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 PlayerOwner;
-	
+		int32 PlayerOwner;
+
+	// Piece's position
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D PieceGridPosition;
+
+	// Type indicates (PAWN, ROOK, KNIGHT, BISHOP, QUEEN or KING)	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		EPieceType PieceType;
+
+	// Value is used for Evaluation (10, 30, 30, 50, 90, 900)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float PieceValue;
+
+	// Reference to GameMode
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		AChess_GameMode* GameMode;
+
+	// Indicates if the Piece was promoted 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsPromoted;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		int32 MovesSincePromotion = 0;
+
+
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	EPieceType PieceType;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float PieceValue;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AChess_GameMode* GameMode;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool bIsPromoted;
-
-public: // TODO: METTERE PRIVATI
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 MovesSincePromotion = 0;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	int32 NumberMovePromotion;
-
-
 public:
 	// ************ SETTERS ************
 	// Set Piece ID
@@ -89,43 +93,61 @@ public:
 	// Set Player Owner
 	void SetPlayerOwner(int32 PlayerNumber);
 
-	// set the (x, y) position
+	// Set the (x, y) position
 	void SetGridPosition(const double InX, const double InY);
 
-	// Method that can be access by all Pieces (children)
-	// in order to set the texture
-	void SetTexture();
+	// Method that can be access by all Pieces (children) to set the texture
+	void SetTexture() const;
 
+	// Set if the Piece is promoted or not
 	void SetIsPromoted(const bool bIsPromoted);
 
+
+	
 	// ************ GETTERS ************
 	// Get Piece ID
 	int32 GetPieceID() const;
 
 	// Get the Piece Owner
-	int32 GetPieceOwner();
+	int32 GetPieceOwner() const;
 	
 	// Get the (x, y) position
 	FVector2D GetGridPosition() const;
 
+	// Get the Value of the Piece
 	int32 GetPieceValue() const;
-	
+
+	// Get the Type of the Piece
 	EPieceType GetPieceType() const;
 
+	// Get if the Piece was promoted or not
 	bool IsPromoted() const;
+
+	// If the Piece was promoted returns the number of moves made in the game, else returns zero
+	int32 GetNumberMovesSincePromotion() const;
+
 
 	
 	// ************ METHODS ************
 	// Method to check if the piece can move in a specific direction
 	virtual TArray<FVector2D> PieceLegalMoves();
-	
+
+	// General function used to search legal moves from directions
 	TArray<FVector2D> SearchLegalMoves(
 		const TArray<FVector2D>& Directions,
 		const bool bMoveUntilPiece = true
 	) const;
 
-	FString PieceTypeToString(const EPieceType Type);
+	// Converts the Type to a string
+	static FString PieceTypeToString(const EPieceType Type);
 
+	// Function for ResetEvent (destroy the piece)
 	UFUNCTION()
-	void SelfDestroy();
+		void SelfDestroy();
+
+	// Add one to Number of moves since promotion variable
+	void IncreaseNumberMovesSincePromotion();
+	
+	// Subtract one to Number of moves since promotion variable
+	void DecreaseNumberMovesSincePromotion();
 };
