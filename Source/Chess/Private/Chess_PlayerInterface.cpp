@@ -1,7 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
-
-//#include "..\Public\Chess_PlayerInterface.h"
 #include "Chess_PlayerInterface.h"
 
 // Add default functionality here for any IChess_PlayerInterface functions that are not pure virtual.
