@@ -1,6 +1,6 @@
 // Copyright © 2024 Andrea Cattarinich
 
-/*** Persistent object for the duration of the game ***/
+// Persistent object for the duration of the game
 #pragma once
 
 #include "CoreMinimal.h"

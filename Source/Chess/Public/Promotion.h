@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -18,6 +18,8 @@ class UPromotion : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 
+	AChess_GameMode* GameMode;
+	
 	UPROPERTY(meta = (BindWidget))
 		UButton* ButtonQueen;
 

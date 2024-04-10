@@ -10,9 +10,6 @@
 #include "Components/ScrollBox.h"
 #include "MovesPanel.generated.h"
 
-//class AChess_GameMode;
-
-
 UCLASS(Abstract)
 class CHESS_API UMovesPanel : public UUserWidget
 {
