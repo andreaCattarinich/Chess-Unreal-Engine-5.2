@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
-#include "..\Public\Chess_RandomPlayer.h"
+#include "Chess_RandomPlayer.h"
 
 // Sets default values
 AChess_RandomPlayer::AChess_RandomPlayer()
@@ -14,7 +14,6 @@ AChess_RandomPlayer::AChess_RandomPlayer()
 void AChess_RandomPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 }
 
@@ -61,21 +60,21 @@ void AChess_RandomPlayer::DecideMove()
 {
 	FTimerHandle TimerHandle1;
 
-	// Timer per eseguire SelectRandomPiece dopo 1 secondo
+	// Timer to run SelectRandomPiece after 1 second
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle1, [this]()
 		{
 			SelectRandomPiece();
 
 			if (GameMode->GField->GetLegalMoves().Num() == 0)
-			{	// Se non esistono mosse valide per la pedina scelta casualmente,
-				// allora ri-esegui il la decisione della mossa
+			{	// If there's no any legal move for the selected piece
+				// then decide another time
 				DecideMove();
 			}
 			else
 			{
 				FTimerHandle TimerHandle2;
 
-				// Altrimenti effettua la Mossa Casuale dopo 2 secondi
+				// Make the move after 1 seconds
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle2, [this]()
 					{
 						RandomMove();
@@ -106,12 +105,12 @@ void AChess_RandomPlayer::SelectRandomPiece() const
 		(AIPieces[RandIdx])->GetGridPosition()[0],
 		(AIPieces[RandIdx])->GetGridPosition()[1]
 	);
+	
 	GameMode->SetSelectedTile(Position);
 }
 
 void AChess_RandomPlayer::RandomMove() const
 {	
-	// MOSSA CASUALE
 	TArray<FVector2D> AILegalMoves = GameMode->GField->GetLegalMoves();
 
 	const int32 RandIdx = FMath::Rand() % AILegalMoves.Num();

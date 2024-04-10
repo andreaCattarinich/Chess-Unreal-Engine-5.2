@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -8,8 +8,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-
-//TODO: keep this include 
 #include "Kismet/GameplayStatics.h" 
 #include "Chess_RandomPlayer.generated.h"
 
@@ -40,7 +38,7 @@ public:
 	// Game instance reference
 	UChess_GameInstance* GameInstance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	// Game Mode reference
 	AChess_GameMode* GameMode;
 
 
@@ -59,6 +57,7 @@ public:
 	virtual void OnLose() override;
 	virtual void OnStalemate() override;
 
+	// Generic function
 	void DecideMove();
 	void SelectRandomPiece() const;
 	void RandomMove() const;
