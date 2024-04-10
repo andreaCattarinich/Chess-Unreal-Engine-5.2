@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -15,7 +15,6 @@ class CHESS_API APawns : public APiece
 public:
     // ************ CONSTRUCTORS ************
     APawns();
-    //~APawns();
 
 protected:
     virtual void BeginPlay() override;
@@ -40,6 +39,6 @@ public:
     // ************ METHODS ************	
     virtual TArray<FVector2D> PieceLegalMoves() override;
 
-    TArray<FVector2D> GetForwardMoves();
-    TArray<FVector2D> GetDiagonalCapturesIfExists();
+    TArray<FVector2D> GetForwardMoves() const;
+    TArray<FVector2D> GetDiagonalCapturesIfExists() const;
 };

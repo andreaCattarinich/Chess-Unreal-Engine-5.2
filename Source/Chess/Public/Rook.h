@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -15,7 +15,6 @@ class CHESS_API ARook : public APiece
 public:
     // ************ CONSTRUCTORS ************
     ARook();
-    //~ARook();
 
 protected:
     virtual void BeginPlay() override;

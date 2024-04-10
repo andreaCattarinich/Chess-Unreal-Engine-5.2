@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #include "Pawns.h"
 #include "..\Public\Chess_GameMode.h"
@@ -31,7 +31,7 @@ TArray<FVector2D> APawns::PieceLegalMoves()
     return LegalMoves;
 }
 
-TArray<FVector2D> APawns::GetForwardMoves()
+TArray<FVector2D> APawns::GetForwardMoves() const
 {
     TArray<FVector2D> ForwardMoves;
     
@@ -83,11 +83,10 @@ TArray<FVector2D> APawns::GetForwardMoves()
     return ForwardMoves;
 }
 
-TArray<FVector2D> APawns::GetDiagonalCapturesIfExists()
+TArray<FVector2D> APawns::GetDiagonalCapturesIfExists() const
 {
     TArray<FVector2D> DiagonalMoves;
     
-    // MOSSE CHE MANGIANO LA PEDINA AVVERSARIA
     TArray<FVector2D> Directions = {
         FVector2D(1, -1),   // UP-LEFT
         FVector2D(1, 1),    // UP-RIGHT
@@ -109,7 +108,7 @@ TArray<FVector2D> APawns::GetDiagonalCapturesIfExists()
  
         if (GameMode->GField->IsValidPosition(Position))
         {
-            ATile* CurrTile = *GameMode->GField->TileMap.Find(Position);
+            const ATile* CurrTile = *GameMode->GField->TileMap.Find(Position);
 
             if (CurrTile->GetTileStatus() == ETileStatus::OCCUPIED)
             {
