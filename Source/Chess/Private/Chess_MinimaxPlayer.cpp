@@ -104,31 +104,31 @@ FMove AChess_MinimaxPlayer::FindBestMove(TArray<ATile*> Board)
 	//	* score: intero (� dato dall'evaluation)
 	//	* mossa: coppia (start, end)
 
-	const FEvaluation Evaluation = MiniMaxChessPruning(Board, STD_DEPTH, -10000, 10000, true);
+	const FEvaluation Evaluation = MiniMaxChessPruning(Board, STD_DEPTH, -100000, 100000, true);
 
 	// Stampa score dell'evaluation
-	/*
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
-		FColor::Blue,
+		FColor::Green,
 		FString::Printf(TEXT("Evaluation score: %d"), Evaluation.Value)
 	);
-	
+	/*
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Red,
 		FString::Printf(TEXT("Nodes visited: %d"), NodesVisited)
 	);
-	*/
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
 		FColor::Red,
 		FString::Printf(TEXT("Possible futures games: %d"), PossibleFutureGames)
 	);
-	/*
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		5.f,
@@ -164,7 +164,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 
 	if (bIsMax)
 	{
-		int32 Max_Eval = -10000;
+		int32 Max_Eval = -100000;
 
 		// ITERO SU TUTTE LE TILE
 		for (auto& CurrentTile : GameMode->GField->TileArray)
@@ -221,7 +221,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChess(
 	}
 	else
 	{
-		int32 Min_Eval = 10000;
+		int32 Min_Eval = 100000;
 
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
@@ -286,7 +286,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int
 
 	if (bIsMax)
 	{
-		int32 Max_Eval = -10000;
+		int32 Max_Eval = -100000;
 
 		// ITERO SU TUTTE LE TILE
 		for (auto& CurrentTile : GameMode->GField->TileArray)
@@ -351,7 +351,7 @@ FEvaluation AChess_MinimaxPlayer::MiniMaxChessPruning(TArray<ATile*>& Board, int
 	}
 	else
 	{
-		int32 Min_Eval = 10000;
+		int32 Min_Eval = 100000;
 
 		for (auto& CurrentTile : GameMode->GField->TileArray)
 		{
@@ -444,8 +444,8 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 		if(GameMode->IsWinnerMove(1, false))
 		{
 			// GameOver = true
-			GameMode->IsGameOver = true;
-			return 10000;
+			GameMode->IsGameOver = false;
+			return 100000;
 		}
 	}
 	else
@@ -453,8 +453,8 @@ int32 AChess_MinimaxPlayer::EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax
 		if(GameMode->IsWinnerMove(0, false))
 		{
 			// GameOver = true
-			GameMode->IsGameOver = true;
-			return -10000;	
+			GameMode->IsGameOver = false;
+			return -100000;	
 		}
 	}
 	if (bIsMax)

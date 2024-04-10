@@ -511,9 +511,9 @@ bool AChess_GameMode::IsCheckMate(const int32 Player, const bool bIsGameMove)
 			TArray<FVector2D> CurrentLegalMoves = GField->LegalMoves(CurrentTile->GetGridPosition());
 			if(CurrentLegalMoves.Contains(GField->GetKingPosition(GetNextPlayer(Player))))
 			{
+				IsGameOver = true;
 				if(bIsGameMove)
 				{
-					IsGameOver = true;
 					Players[CurrentPlayer]->OnWin();
 					for (int32 i = 0; i < Players.Num(); i++)
 					{
@@ -528,9 +528,9 @@ bool AChess_GameMode::IsCheckMate(const int32 Player, const bool bIsGameMove)
 		}
 	}
 
+	IsGameOver = true;
 	if(bIsGameMove)
 	{
-		IsGameOver = true;
 		for (int32 i = 0; i < Players.Num(); i++)
 		{
 			Players[i]->OnStalemate();

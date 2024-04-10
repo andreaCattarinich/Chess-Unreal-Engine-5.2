@@ -47,6 +47,7 @@ void AGameField::BeginPlay()
 	
 	GenerateField();
 	GeneratePieces();
+	//GeneratePiecesForMinimaxTest();
 }
 
 void AGameField::SetSelectedTile(const FVector2D Position)
@@ -208,17 +209,38 @@ void AGameField::GeneratePieces()
 
 void AGameField::GeneratePiecesForMinimaxTest()
 {
-	// WHITE
-	GeneratePiece<ARook>(FVector2D(2, 1), 0);
-	GeneratePiece<AKnight>(FVector2D(1, 0), 0);
-	GeneratePiece<ABishop>(FVector2D(1, 2), 0);
-	GeneratePiece<APawns>(FVector2D(5, 5), 0);
-	GeneratePiece<AKing>(FVector2D(1, 1), 0);
+	GeneratePiece<ARook>	(FVector2D(0, 0), 0);
+	GeneratePiece<AKnight>	(FVector2D(0, 1), 0);
+	GeneratePiece<ABishop>	(FVector2D(0, 2), 0);
+	GeneratePiece<AQueen>	(FVector2D(0, 3), 0);
+	GeneratePiece<AKing>	(FVector2D(2, 5), 0);
+	GeneratePiece<ABishop>	(FVector2D(0, 5), 0);
+	GeneratePiece<AKnight>	(FVector2D(0, 6), 0);
+	GeneratePiece<ARook>	(FVector2D(0, 7), 0);
+
+	for (int32 i = 0; i < 7; i++)
+	{
+		if(i != 4)
+			GeneratePiece<APawns>(FVector2D(1, i), 0);
+	}
+
+	GeneratePiece<APawns>(FVector2D(3, 4), 0);
+
 	
-	// BLACK
-	GeneratePiece<ABishop>(FVector2D(0, 1), 1);
-	GeneratePiece<APawns>(FVector2D(1, 6), 1);
-	GeneratePiece<AKing>(FVector2D(0, 7), 1);
+	GeneratePiece<ARook>	(FVector2D(Size - 1, 0), 1);
+	GeneratePiece<AKnight>	(FVector2D(Size - 1, 1), 1);
+	GeneratePiece<ABishop>	(FVector2D(Size - 1, 2), 1);
+	GeneratePiece<AQueen>	(FVector2D(Size - 1, 3), 1);
+	GeneratePiece<AKing>	(FVector2D(Size - 1, 4), 1);
+	GeneratePiece<ABishop>	(FVector2D(Size - 1, 5), 1);
+	GeneratePiece<AKnight>	(FVector2D(3, 6), 1);
+	GeneratePiece<ARook>	(FVector2D(Size - 1, 7), 1);
+
+	for (int32 i = 0; i < 7; i++)
+	{
+		GeneratePiece<APawns>(FVector2D(Size - 2, i), 1);
+	}
+	GeneratePiece<APawns>(FVector2D(4, 7), 1);
 
 }
 
