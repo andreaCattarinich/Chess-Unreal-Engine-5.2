@@ -219,8 +219,13 @@ FString UMoveWidget::IntToLetter(const int32 Value) const
 
 void UMoveWidget::OnBtnClick()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), NumberMove);
+	// Black must do the move. After then you can reset the field
+	if(GameMode->Moves.Num() % 2 == 1)
+	{
+		return;
+	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), NumberMove);
 	int32 index;
 
 	// Se è una mossa nera

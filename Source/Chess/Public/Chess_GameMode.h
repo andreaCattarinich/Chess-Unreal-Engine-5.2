@@ -125,6 +125,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		int32 CurrentPlayerForPromotion; // 0 sceglie, 1 queen, 2 ...
+
+	UPROPERTY(VisibleAnywhere)
+		int32 Winner;
+
 	
 	// ************ SETTERS ************
 	// Esegue tutte le operazioni sulla GameField per selezionare la Tile

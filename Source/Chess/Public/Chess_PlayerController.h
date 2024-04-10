@@ -1,11 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
-/*  PlayerController è un Asset che serve a trasformare
-	input esterni ad azioni del gioco.
-*/
+// PlayerController is an Asset that is used to transform external inputs to game actions
 #pragma once
-
-#include "Chess_HumanPlayer.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -29,7 +25,7 @@ protected:
 public:
 	// ************ ATTRIBUTES ************
 	UPROPERTY(EditAnywhere, Category = Input)
-		UInputMappingContext* TTTContext;
+		UInputMappingContext* ChessContext;
 
 	UPROPERTY(EditAnywhere, Category = Input)
 		UInputAction* ClickAction;
@@ -46,6 +42,7 @@ public:
 	
 	// ************ METHODS ************
 	void ClickOnGrid();
+	
 protected:
 	virtual void SetupInputComponent() override;
 };

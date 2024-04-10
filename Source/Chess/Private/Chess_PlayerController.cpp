@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "..\Public\Chess_PlayerController.h"
+#include "Chess_PlayerController.h"
+#include "Chess_HumanPlayer.h"
 #include "Components/InputComponent.h"
 
 AChess_PlayerController::AChess_PlayerController()
@@ -16,7 +17,7 @@ void AChess_PlayerController::BeginPlay()
 	
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		Subsystem->AddMappingContext(TTTContext, 0);
+		Subsystem->AddMappingContext(ChessContext, 0);
 	}
 }
 
