@@ -28,16 +28,6 @@ protected:
 	// Reference to the entry widget
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class UMoveWidgetEntry> MoveWidgetEntryRef;
-
-	//UPROPERTY(EditAnywhere)
-	//TSubclassOf<class UUserWidget> HorizontalEntry;
-/*
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> NumberEntry;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UUserWidget> ButtonEntry;
-*/
 	
 	// ************ SETTERS ************	
 

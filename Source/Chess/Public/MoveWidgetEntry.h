@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -17,39 +17,48 @@ class CHESS_API UMoveWidgetEntry : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
+	// ************ ATTRIBUTES ************	
 	UPROPERTY(meta =(BindWidget))
-	UHorizontalBox* HorizontalBox;
+		UHorizontalBox* HorizontalBox;
 	
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Number;
+		UTextBlock* Number;
 	
 	UPROPERTY(meta =(BindWidget))
-	UButton* Btn1;
+		UButton* Btn1;
 	
 	UPROPERTY(meta =(BindWidget))
-	UTextBlock* TextLabel1;
+		UTextBlock* TextLabel1;
 
 	UPROPERTY(meta =(BindWidget))
-	UButton* Btn2;
+		UButton* Btn2;
 
 	UPROPERTY(meta =(BindWidget))
-	UTextBlock* TextLabel2;
+		UTextBlock* TextLabel2;
 
+	// If the player can click on buttons
 	bool CanClick = true;
 	
-	int NumberMove;
-
-	void SetData(const FMove& Move, int32 FirstOrSecond);
-
+	int32 NumberMove;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AChess_GameMode* GameMode;
+		AChess_GameMode* GameMode;
 
-	FString TypeToChar(EPieceType Type) const;
+	// ************ SETTERS ************	
+	void SetData(const FMove& Move);
 
-	FString PositionToStringMove(FVector2D Position) const;
 
-	FString IntToLetter(int32 Value) const;
+
+	// ************ GETTERS ************
+
+
+
+	// ************ METHODS ************
+	static FString TypeToChar(EPieceType Type);
+
+	static FString PositionToStringMove(FVector2D Position);
+
+	static FString IntToLetter(int32 Value);
 
 	UFUNCTION()
 	void OnBtnClick();

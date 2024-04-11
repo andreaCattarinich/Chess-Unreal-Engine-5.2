@@ -38,7 +38,7 @@ void UMovesPanel::AddMoveToPanel(const FMove& Move)
 		Entry->Number->SetText(FText::FromString(Number));
 
 		// white
-		Entry->SetData(Move,0);
+		Entry->SetData(Move);
 
 		// black (hidden)
 		Entry->Btn2->SetVisibility(ESlateVisibility::Hidden);
@@ -53,7 +53,7 @@ void UMovesPanel::AddMoveToPanel(const FMove& Move)
 		Entry->Btn2->SetVisibility(ESlateVisibility::Visible);
 
 		// set
-		Entry->SetData(Move,1);
+		Entry->SetData(Move);
 	}
 }
 

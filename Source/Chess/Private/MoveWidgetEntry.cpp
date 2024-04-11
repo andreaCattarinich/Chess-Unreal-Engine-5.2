@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #include "MoveWidgetEntry.h"
 
-void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
+void UMoveWidgetEntry::SetData(const FMove& Move)
 {
 	NumberMove = ceil(Move.NumberMove / 2.0);
 	
@@ -44,22 +44,20 @@ void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 	            
 	            GameMode->GField->SetSelectedTile(OtherPiece->GetGridPosition());
 	            const TArray<FVector2d> LegalMovesOfOtherPiece = GameMode->GField->LegalMoves(OtherPiece->GetGridPosition());
-	            //GameMode->GField->ResetGameStatusField();
 
 	            GameMode->GField->SetSelectedTile(LastMove.Start);
 	            GameMode->DoMove(LastMove.End);
-	           //GameMode->GField->ResetGameStatusField();
 
 	            if (LegalMovesOfOtherPiece.Contains(Move.End))
 	            {
 	                if (Move.Start.Y == OtherPiece->GetGridPosition().Y)
 	                {
-	                    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CASO SPECIALE 2"));
+	                    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Special Case 2"));
 	                    StringMove += FString::FromInt(Move.Start.X + 1);
 	                }
 	                else
 	                {
-	                    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CASO SPECIALE 1"));
+	                    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Special Case 1"));
 	                    StringMove += IntToLetter(static_cast<int>(Move.Start.Y));	
 	                }
 	            }
@@ -82,15 +80,8 @@ void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 	}
 
 	StringMove += PositionToStringMove(Move.End);
-	/*
-	int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetTileOwner();
 
-	if(GameMode->IsWinMove(Player))
-	{
-		StringMove += "#";
-	}
-	*/
-	bool bIsPatta = true;
+	bool bIsStalemate = true;
 	const int32 Player = (*GameMode->GField->TileMap.Find(Move.End))->GetTileOwner();
 	for(const auto& CurrentTile : GameMode->GField->TileArray)
 	{
@@ -100,16 +91,14 @@ void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 
 			TArray<FVector2D> CurrentLegalMoves;
 			
-			//GameMode->CurrentPlayer = GameMode->GetNextPlayer(GameMode->CurrentPlayer);
 			CurrentLegalMoves = GameMode->GField->LegalMoves(CurrentTile->GetGridPosition());
-			//GameMode->CurrentPlayer = GameMode->GetNextPlayer(GameMode->CurrentPlayer);
 			
 			if(CurrentLegalMoves.Contains(GameMode->GField->GetKingPosition((GameMode->GetNextPlayer(GameMode->CurrentPlayer)))))
 			{
 				
 				if(GameMode->IsWinnerMove(Player, false))
 				{
-					bIsPatta = false;
+					bIsStalemate = false;
 					StringMove += "#";
 					if(Player == 0)
 					{
@@ -128,32 +117,12 @@ void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 		}
 	}
 
-	if(GameMode->IsWinnerMove(Player, false) && bIsPatta)
+	if(GameMode->IsWinnerMove(Player, false) && bIsStalemate)
 	{
 		StringMove += " 1/2-1/2";
 	}
-
-
-
-
 	
-	/*
-	FString NumberMoveString = "";
-	if(NumberMove % 2 == 1)
-	{
-		NumberMoveString = FString::FromInt(ceil(static_cast<float>(NumberMove)/2));
-		NumberMoveString += ".";
-	}
-	else
-	{
-		NumberMoveString += "   ";
-	}
-	*/
-	//Number->SetText(FText::FromString(NumberMoveString));
-
-
-
-	if(FirstOrSecond == 0)
+	if(Move.NumberMove % 2 == 1)
 	{
 		TextLabel1->SetText(FText::FromString(StringMove));
 		Btn1->OnClicked.AddDynamic(this, &UMoveWidgetEntry::OnBtnClick);
@@ -165,7 +134,7 @@ void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 	}
 }
 
-FString UMoveWidgetEntry::TypeToChar(const EPieceType Type) const
+FString UMoveWidgetEntry::TypeToChar(const EPieceType Type)
 {
 	switch (Type)
 	{
@@ -179,50 +148,31 @@ FString UMoveWidgetEntry::TypeToChar(const EPieceType Type) const
 	}
 }
 
-FString UMoveWidgetEntry::PositionToStringMove(FVector2D Position) const
+FString UMoveWidgetEntry::PositionToStringMove(const FVector2D Position)
 {
-	FString X = FString::FromInt(Position.X + 1);
-	int32 IntPositionY = FMath::RoundToInt(Position.Y);
-	FString Y = IntToLetter(IntPositionY);
+	const FString X = FString::FromInt(Position.X + 1);
+	const int32 IntPositionY = FMath::RoundToInt(Position.Y);
+	const FString Y = IntToLetter(IntPositionY);
 
 	return Y + X;
 
 }
 
-FString UMoveWidgetEntry::IntToLetter(const int32 Value) const
+FString UMoveWidgetEntry::IntToLetter(const int32 Value)
 {
 	FString Letter;
 	switch (Value)
 	{
-	case 0:
-		Letter = "a";
-		break;
-	case 1:
-		Letter = "b";
-		break;
-	case 2:
-		Letter = "c";
-		break;
-	case 3:
-		Letter = "d";
-		break;
-	case 4:
-		Letter = "e";
-		break;
-	case 5:
-		Letter = "f";
-		break;
-	case 6:
-		Letter = "g";
-		break;
-	case 7:
-		Letter = "h";
-		break;
-	default:
-		Letter = "Invalid";
-		break;
+	case 0: return "a";
+	case 1: return "b";
+	case 2: return "c";
+	case 3: return "d";
+	case 4: return "e";
+	case 5: return "f";
+	case 6: return "g";
+	case 7: return "h";
+	default: return "Invalid";
 	}
-	return Letter;
 }
 
 void UMoveWidgetEntry::OnBtnClick()
