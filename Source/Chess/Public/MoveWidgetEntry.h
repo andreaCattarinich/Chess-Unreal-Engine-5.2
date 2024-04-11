@@ -7,28 +7,40 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/HorizontalBox.h"
 #include "Components/TextBlock.h"
-#include "MoveWidget.generated.h"
+#include "MoveWidgetEntry.generated.h"
 
 UCLASS()
-class CHESS_API UMoveWidget : public UUserWidget
+class CHESS_API UMoveWidgetEntry : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY(meta =(BindWidget))
-	UButton* Btn;
-
+	UHorizontalBox* HorizontalBox;
+	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Number;
+	
+	UPROPERTY(meta =(BindWidget))
+	UButton* Btn1;
+	
+	UPROPERTY(meta =(BindWidget))
+	UTextBlock* TextLabel1;
 
 	UPROPERTY(meta =(BindWidget))
-	UTextBlock* TextLabel;
+	UButton* Btn2;
 
+	UPROPERTY(meta =(BindWidget))
+	UTextBlock* TextLabel2;
+
+	bool CanClick = true;
+	
 	int NumberMove;
 
-	void SetData(const FMove& Move);
+	void SetData(const FMove& Move, int32 FirstOrSecond);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AChess_GameMode* GameMode;
@@ -41,4 +53,7 @@ public:
 
 	UFUNCTION()
 	void OnBtnClick();
+	
+	void DelayedUndo();
+
 };

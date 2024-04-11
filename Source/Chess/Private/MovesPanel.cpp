@@ -1,40 +1,79 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #include "MovesPanel.h"
 
-#include "MoveWidget.h"
+#include "MoveWidgetEntry.h"
 #include "Components/Button.h"
-#include "Components/TextBlock.h"
+#include "Components/HorizontalBox.h"
 
 void UMovesPanel::NativeConstruct()
 {
 	Super::NativeConstruct();
-
 }
 
-UScrollBox* UMovesPanel::GetVerticalBox() const
+UScrollBox* UMovesPanel::GetScrollBox() const
 {
-	return VerticalBox;
+	return ScrollBox;
 }
 
 void UMovesPanel::AddMoveToPanel(const FMove& Move)
 {
-	if(MoveWidgetRef)
+	// If the move is by the white player
+	// => I add new record on the panel
+	// record is: [N. white black]
+	if(Move.NumberMove % 2 == 1)
 	{
-		UUserWidget* widget = CreateWidget(this, MoveWidgetRef);
-		VerticalBox->AddChild(widget);
-		//ListOfMoves->AddItem(widget);
-		UMoveWidget* move = Cast<UMoveWidget>(widget);
-		move->SetData(Move);
+		UUserWidget* Widget = CreateWidget(this, MoveWidgetEntryRef);
+		ScrollBox->AddChild(Widget);
+		
+		UMoveWidgetEntry* Entry = Cast<UMoveWidgetEntry>(Widget);
+		
+		FString Number = FString::FromInt(ceil(Move.NumberMove / 2.0));;
+
+		(ceil(Move.NumberMove / 2.0) < 10)
+			? Number += ".  "
+			: Number += ".";
+
+		// N.
+		Entry->Number->SetText(FText::FromString(Number));
+
+		// white
+		Entry->SetData(Move,0);
+
+		// black (hidden)
+		Entry->Btn2->SetVisibility(ESlateVisibility::Hidden);
+	}
+	// If the move is by the black player
+	else
+	{
+		UWidget* LastChild = ScrollBox->GetChildAt(GetScrollBox()->GetChildrenCount() - 1);
+		UMoveWidgetEntry* Entry = Cast<UMoveWidgetEntry>(LastChild);
+
+		// black (visible)
+		Entry->Btn2->SetVisibility(ESlateVisibility::Visible);
+
+		// set
+		Entry->SetData(Move,1);
 	}
 }
 
 void UMovesPanel::PopFromPanel()
 {
-	if (VerticalBox->GetChildrenCount() > 0)
+	// If scroll box has element(s)
+	// => remove one from it
+	if (ScrollBox->GetChildrenCount() > 0)
 	{
-		//UWidget* LastChild = VerticalBox->GetChildAt(VerticalBox->GetChildrenCount() - 1);
-		VerticalBox->RemoveChildAt(VerticalBox->GetChildrenCount()-1);
-		//LastChild->RemoveFromParent();
+		UWidget* LastChild = ScrollBox->GetChildAt(ScrollBox->GetChildrenCount() - 1);
+
+		const UMoveWidgetEntry* Entry = Cast<UMoveWidgetEntry>(LastChild);
+
+		if(Entry->Btn2->GetVisibility() == ESlateVisibility::Hidden)
+		{
+			LastChild->RemoveFromParent();
+		}
+		else
+		{
+			Entry->Btn2->SetVisibility(ESlateVisibility::Hidden);
+		}
 	}
 }

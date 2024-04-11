@@ -410,7 +410,7 @@ void AGameField::ResetField()
 	GameMode->WPiecesKilled.Empty();
 	GameMode->BPiecesKilled.Empty();
 	
-	while(GameMode->MovesPanel->GetVerticalBox()->GetChildrenCount() > 0)
+	while(GameMode->MovesPanel->GetScrollBox()->GetChildrenCount() > 0)
 	{
 		GameMode->MovesPanel->PopFromPanel();
 	}

@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "MoveWidgetEntry.h"
 
-#include "MoveWidget.h"
-
-void UMoveWidget::SetData(const FMove& Move)
+void UMoveWidgetEntry::SetData(const FMove& Move, int32 FirstOrSecond)
 {
-	NumberMove = Move.NumberMove;
+	NumberMove = ceil(Move.NumberMove / 2.0);
 	
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
@@ -138,7 +137,7 @@ void UMoveWidget::SetData(const FMove& Move)
 
 
 	
-	
+	/*
 	FString NumberMoveString = "";
 	if(NumberMove % 2 == 1)
 	{
@@ -149,15 +148,24 @@ void UMoveWidget::SetData(const FMove& Move)
 	{
 		NumberMoveString += "   ";
 	}
-	
-	Number->SetText(FText::FromString(NumberMoveString));
+	*/
+	//Number->SetText(FText::FromString(NumberMoveString));
 
 
-	TextLabel->SetText(FText::FromString(StringMove));
-	Btn->OnClicked.AddDynamic(this, &UMoveWidget::OnBtnClick);
+
+	if(FirstOrSecond == 0)
+	{
+		TextLabel1->SetText(FText::FromString(StringMove));
+		Btn1->OnClicked.AddDynamic(this, &UMoveWidgetEntry::OnBtnClick);
+	}
+	else
+	{
+		TextLabel2->SetText(FText::FromString(StringMove));
+		Btn2->OnClicked.AddDynamic(this, &UMoveWidgetEntry::OnBtnClick);
+	}
 }
 
-FString UMoveWidget::TypeToChar(const EPieceType Type) const
+FString UMoveWidgetEntry::TypeToChar(const EPieceType Type) const
 {
 	switch (Type)
 	{
@@ -171,7 +179,7 @@ FString UMoveWidget::TypeToChar(const EPieceType Type) const
 	}
 }
 
-FString UMoveWidget::PositionToStringMove(FVector2D Position) const
+FString UMoveWidgetEntry::PositionToStringMove(FVector2D Position) const
 {
 	FString X = FString::FromInt(Position.X + 1);
 	int32 IntPositionY = FMath::RoundToInt(Position.Y);
@@ -181,7 +189,7 @@ FString UMoveWidget::PositionToStringMove(FVector2D Position) const
 
 }
 
-FString UMoveWidget::IntToLetter(const int32 Value) const
+FString UMoveWidgetEntry::IntToLetter(const int32 Value) const
 {
 	FString Letter;
 	switch (Value)
@@ -217,32 +225,36 @@ FString UMoveWidget::IntToLetter(const int32 Value) const
 	return Letter;
 }
 
-void UMoveWidget::OnBtnClick()
+void UMoveWidgetEntry::OnBtnClick()
 {
+	if(!CanClick)
+	{
+		return;
+	}
+	
 	// Black must do the move. After then you can reset the field
-	if(GameMode->Moves.Num() % 2 == 1)
+	if(GameMode->Moves.Num() % 2 == 1 || GameMode->Moves.Num() == NumberMove*2)
 	{
 		return;
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Move pressed: %d"), NumberMove);
-	int32 index;
 
-	// Se è una mossa nera
-	// => vado indietro fino alla mossa successiva bianca
-	if (NumberMove % 2 == 0)
-	{
-		index = NumberMove;
-	}
-	else
-	{
-		index = NumberMove + 1;
-	}
-
-	while (GameMode->Moves.Num() > index)
-	{
-		GameMode->GField->ResetGameStatusField();
-		GameMode->UndoMove(true);
-	}
+	CanClick = false;
+	DelayedUndo();
+	CanClick = true;
 }
 
+void UMoveWidgetEntry::DelayedUndo()
+{
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
+		{
+			GameMode->UndoMove(true);
+		
+			if(GameMode->Moves.Num() > NumberMove*2)
+			{
+				DelayedUndo();	
+			}
+		}, 0.25f, false);
+}

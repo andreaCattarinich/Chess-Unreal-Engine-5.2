@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
@@ -6,7 +6,6 @@
 #include "Chess_GameMode.h"
 #include "Blueprint/UserWidget.h"
 
-#include "Components/VerticalBox.h"
 #include "Components/ScrollBox.h"
 #include "MovesPanel.generated.h"
 
@@ -16,20 +15,42 @@ class CHESS_API UMovesPanel : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
+	// ************ CONSTRUCTORS ************
 	virtual void NativeConstruct() override;
-	/****************************/
 
+	
+
+	// ************ ATTRIBUTES ************	
+	// List with scroll bar
 	UPROPERTY(meta = (BindWidget))
-	UScrollBox* VerticalBox;
-	
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class UMoveWidget> MoveWidgetRef;
+		UScrollBox* ScrollBox;
 
-	//UPROPERTY(meta = (BindWidget))
-	//UListView* ListOfMoves;
+	// Reference to the entry widget
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UMoveWidgetEntry> MoveWidgetEntryRef;
+
+	//UPROPERTY(EditAnywhere)
+	//TSubclassOf<class UUserWidget> HorizontalEntry;
+/*
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> NumberEntry;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> ButtonEntry;
+*/
 	
+	// ************ SETTERS ************	
+
+
+	
+	// ************ GETTERS ************	
 public:
-	UScrollBox* GetVerticalBox() const;
+	UScrollBox* GetScrollBox() const;
+
+	
+
+	// ************ METHODS ************
 	void AddMoveToPanel(const FMove& Move);
+	
 	void PopFromPanel();
 };

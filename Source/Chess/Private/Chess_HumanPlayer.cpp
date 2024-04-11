@@ -93,7 +93,7 @@ void AChess_HumanPlayer::OnClick()
 		HandleTileClick(ClickedTile);
 	}
 	
-	// If human clicks on a Tile
+	// If human clicks on a Piece
 	else if (const APiece* ClickedPiece = Cast<APiece>(Hit.GetActor()))
 	{
 		HandlePieceClick(ClickedPiece);
