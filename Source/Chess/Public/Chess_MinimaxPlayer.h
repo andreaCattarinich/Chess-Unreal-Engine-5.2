@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
 #pragma once
 
-#include "Piece.h" // TODO: da togliere ma controllare inclusione di TTT_GameMode
+#include "Piece.h"
 #include "Chess_GameMode.h"
 
 #include "CoreMinimal.h"
@@ -29,8 +29,8 @@ struct FEvaluation
 	{
 	}
 
-	FEvaluation(int32 _Value, const FMove& _Move)
-		: Value(_Value), Move(_Move)
+	FEvaluation(const int32 NewValue, const FMove& NewMove)
+		: Value(NewValue), Move(NewMove)
 	{
 	}
 };
@@ -62,24 +62,32 @@ public:
 	virtual void OnLose() override;
 	virtual void OnStalemate() override;
 
+
+	
 	/**** ATTRIBUTES ****/
 	int32 STD_DEPTH;
 
+	// Reference to GameMode
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AChess_GameMode* GameMode;
-
+		AChess_GameMode* GameMode;
+	
+	// Number of visited nodes
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	mutable int32 NodesVisited;
+		mutable int32 NodesVisited;
 
+	// Number of visited leaves
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	mutable int32 PossibleFutureGames;
+		mutable int32 PossibleFutureGames;
 
+	// Number of White break in minimax
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	mutable int32 WhitePruning;
+		mutable int32 WhitePruning;
 
+	// Number of Black break in minimax
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	mutable int32 BlackPruning;
+		mutable int32 BlackPruning;
 
+	
 	
 	/**** METHODS ****/
 	int32 EvaluateChessGrid(TArray<ATile*>& Board, bool bIsMax) const;
