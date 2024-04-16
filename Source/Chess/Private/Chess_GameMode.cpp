@@ -519,10 +519,10 @@ void AChess_GameMode::UndoGesture(bool bIsGameMove)
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this, bIsGameMove]()
 				{
 					UndoMove(bIsGameMove);
+					CanClickUndoButton = true;
 				}, 0.5f, false);
 		}
 		
-		CanClickUndoButton = true;
 	}
 }
 
