@@ -407,8 +407,8 @@ void AGameField::ResetField()
 
 	GameMode->PrepareReset();
 	GameMode->Moves.Empty();
-	GameMode->WPiecesKilled.Empty();
-	GameMode->BPiecesKilled.Empty();
+	GameMode->WhiteCapturedPieces.Empty();
+	GameMode->BlackCapturedPieces.Empty();
 	
 	while(GameMode->MovesPanel->GetScrollBox()->GetChildrenCount() > 0)
 	{

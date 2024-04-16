@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Copyright © 2024 Andrea Cattarinich
 
-#include "..\Public\Chess_GameMode.h"
+#include "Chess_GameMode.h"
 
 #include "Queen.h"
 #include "Rook.h"
@@ -8,16 +8,15 @@
 #include "Knight.h"
 
 #include "GameField.h"
-#include "..\Public\Chess_PlayerController.h"
-#include "..\Public\Chess_HumanPlayer.h"
-#include "..\Public\Chess_RandomPlayer.h"
-#include "..\Public\Chess_MinimaxPlayer.h"
+#include "Chess_PlayerController.h"
+#include "Chess_HumanPlayer.h"
+#include "Chess_RandomPlayer.h"
+#include "Chess_MinimaxPlayer.h"
 
 #include "MovesPanel.h"
 #include "Promotion.h"
 
 #include "EngineUtils.h"
-
 
 AChess_GameMode::AChess_GameMode()
 {
@@ -32,8 +31,6 @@ AChess_GameMode::AChess_GameMode()
 	MovesPanel = nullptr;
 	Promotion = nullptr;
 	CurrentPlayerForPromotion = -1;
-	bIsChoosing = false;
-	
 }
 
 void AChess_GameMode::BeginPlay()
@@ -55,8 +52,7 @@ void AChess_GameMode::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("Game Field is null"));
 	}
-
-
+	
 	const float CameraPosX = ((GField->TileSize * (FieldSize + ((FieldSize - 1) * GField->NormalizedCellPadding) - (FieldSize - 1))) / 2) - (GField->TileSize / 2);
 	const FVector CameraPos(CameraPosX, CameraPosX, 1500.0f);
 
@@ -84,33 +80,30 @@ void AChess_GameMode::BeginPlay()
 		PlayerNames.Add(1, "AI");
 	}
 	
-
-	MovesPanel = CreateWidget<UMovesPanel>(GetGameInstance(), WidgetClass);
+	MovesPanel = CreateWidget<UMovesPanel>(GetGameInstance(), PanelWidgetClass);
 
 	if(MovesPanel)
 	{
 		MovesPanel->AddToViewport(0);		
 	}
-
-	/****/
+	
 	PrepareReset();
-
-	/*****/
+	
 	ChoosePlayerAndStartGame();
 }
 
 void AChess_GameMode::SetSelectedTile(const FVector2D Position) const
 {
-	// Reset dei colori del campo
+	// Reset the field colors
 	GField->ResetGameStatusField();
 
-	// Mostra Tile selezionata (colore blu)
+	// Show selected Tile (blue color)
 	GField->SelectTile(Position);
 
-	// Restituisci le mosse del pezzo la cui posizione � passata per parametro
+	// Return the moves for the piece at the given position passed as a parameter
 	GField->SetLegalMoves(GField->LegalMoves(Position));
 	
-	// Mostra le Mosse Legali (colore giallo)
+	// Show legal moves (yellow color)
 	GField->ShowLegalMovesInTheField();
 }
 
@@ -122,11 +115,6 @@ int32 AChess_GameMode::GetNextPlayer(int32 Player) const
 		Player = 0;
 	}
 	return Player;
-}
-
-AGameField* AChess_GameMode::GetGameField() const
-{
-	return GField;
 }
 
 void AChess_GameMode::ChoosePlayerAndStartGame()
@@ -164,24 +152,31 @@ void AChess_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove
 		GField->ResetGameStatusField();
 	}
 
-	// Se il pezzo mosso è una pedina
+	// If the moved piece is a pawn, handle the promotion.
 	if (IsPawn(EndPosition))
 	{
-		// Gestisco la promozione
 		HandlePawnPromotionIfExists(EndPosition, bIsGameMove);
 	}
 	
-	// Se il pezzo che ho mosso era un pezzo già promosso
+	// If the piece I moved was already promoted, add 1 to the moves made after the promotion
 	APiece* Piece = (*GField->TileMap.Find(EndPosition))->GetPiece();
 	if (Piece->IsPromoted())
 	{
-		// Aggiungo 1 alle mosse eseguite dopo la promozione
 		Piece->IncreaseNumberMovesSincePromotion();
 	}
 
-	const FMove CurrentMove = FMove(Moves.Num() + 1, IDPieceToMove, StartPosition, EndPosition, IDPieceEaten); 
+	const FMove CurrentMove = FMove(
+			Moves.Num() + 1,
+			IDPieceToMove,
+			StartPosition,
+			EndPosition,
+			IDPieceEaten
+		);
+	
+	// Add the move to the stack
 	Moves.Add(CurrentMove);
 
+	// If the move is not simulate, then add the move to the ScrollBox
 	if(bIsGameMove)
 	{
 		MovesPanel->AddMoveToPanel(CurrentMove);
@@ -195,8 +190,9 @@ void AChess_GameMode::DoMove(const FVector2D EndPosition, const bool bIsGameMove
 
 void AChess_GameMode::UndoMove(const bool bIsGameMove)
 {
+	// Pop the move from the stack
 	const FMove LastMove = Moves.Pop();
-
+	
 	HandleUndoMoveForPawnsAndPromotion(LastMove.End, bIsGameMove);	
 
 	SetTileMapStatus(LastMove.End, LastMove.Start);
@@ -212,11 +208,11 @@ void AChess_GameMode::UndoMove(const bool bIsGameMove)
 		APiece* PieceToRespawn;
 		if((*GField->TileMap.Find(LastMove.Start))->GetTileOwner() == 0)
 		{
-			PieceToRespawn = BPiecesKilled.Pop(); 
+			PieceToRespawn = BlackCapturedPieces.Pop(); 
 		}
 		else
 		{
-			PieceToRespawn = WPiecesKilled.Pop();
+			PieceToRespawn = WhiteCapturedPieces.Pop();
 		}
 
 		(*GField->TileMap.Find(LastMove.End))->SetTileStatus(
@@ -235,6 +231,7 @@ void AChess_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D En
 	ATile*	StartTile	= *GField->TileMap.Find(Start);
 	const int32	StartOwner	= StartTile->GetTileOwner();
 	APiece*	Piece		= StartTile->GetPiece();
+	
 	Piece->SetGridPosition(End.X, End.Y);
 	
 	StartTile->SetTileStatus(-1, ETileStatus::EMPTY, nullptr);
@@ -242,51 +239,32 @@ void AChess_GameMode::SetTileMapStatus(const FVector2D Start, const FVector2D En
 	(*GField->TileMap.Find(End))->SetTileStatus(StartOwner, ETileStatus::OCCUPIED, Piece);
 }
 
-int32 AChess_GameMode::CaptureThePieceIfExist(FVector2D End, const bool bIsGamemove)
+int32 AChess_GameMode::CaptureThePieceIfExist(const FVector2D End, const bool bIsGameMove)
 {
-	ATile* EndTile = *GField->TileMap.Find(End);
-
-	// Se la pedina � dell'avversario,
-	// => La mangio e restituisco il suo ID
+	const ATile* EndTile = *GField->TileMap.Find(End);
+	
 	if (EndTile->GetTileOwner() == (CurrentPlayer ^ 1))
 	{
-		return CaptureThePiece(End, bIsGamemove);
+		return CaptureThePiece(End, bIsGameMove);
 	}
 
 	return -1;
 }
 
-int32 AChess_GameMode::CaptureThePiece(FVector2D End, const bool bIsGameMove)
+int32 AChess_GameMode::CaptureThePiece(const FVector2D End, const bool bIsGameMove)
 {
 	APiece* PieceKilled = (*GField->TileMap.Find(End))->GetPiece();
 	
 	(CurrentPlayer == 0)
-		? BPiecesKilled.Add(PieceKilled)
-		: WPiecesKilled.Add(PieceKilled);
+		? BlackCapturedPieces.Add(PieceKilled)
+		: WhiteCapturedPieces.Add(PieceKilled);
 
-	// TODO: cambiare la posizione e metterli a lato della scacchiera
-	//PieceKilled->SetActorLocation(FVector(350, -350, 0));
 	PieceKilled->SetActorHiddenInGame(true);
 	PieceKilled->SetActorEnableCollision(false);
 
-	
-	// TODO: serve?
 	(*GField->TileMap.Find(End))->SetTileStatus(-1, ETileStatus::EMPTY, nullptr);
 	
 	return PieceKilled->GetPieceID();
-
-	/*
-	* Non uso pi� questo distruttore perch� i pezzi devono rimanere
-	* nel background del gioco
-	*
-	* PieceToRemove->Destroy();
-	*/
-
-	/* TODO: aggiungi la seguente implementazione
-	*
-	*	LISTA DEI PEZZI IN VITA
-	* Quando entro in questa funzione, rimuovo il pezzo dalla lista
-	*/
 }
 
 void AChess_GameMode::SetPieceLocation(const FVector2D End) const
@@ -309,6 +287,7 @@ void AChess_GameMode::HandlePawnPromotionIfExists(const FVector2D Position, cons
 	{
 		HandlePawnPromotion(0, Position, bIsGameMove);
 	}
+	// Handle Black Pawns
 	else if(Position.X == 0)
 	{
 		HandlePawnPromotion(1, Position, bIsGameMove);
@@ -317,7 +296,7 @@ void AChess_GameMode::HandlePawnPromotionIfExists(const FVector2D Position, cons
 
 void AChess_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Position, const bool bIsGameMove)
 {
-	/* FOR DEBUG
+	/* Debug
 	if (bIsGameMove)
 	{
 		(Player == 0)
@@ -328,27 +307,27 @@ void AChess_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Po
 	APiece* PawnPromoted = (*GField->TileMap.Find(Position))->GetPiece();
 
 	(Player == 0)
-		? WPiecesKilled.Add(PawnPromoted)
-		: BPiecesKilled.Add(PawnPromoted);
+		? WhiteCapturedPieces.Add(PawnPromoted)
+		: BlackCapturedPieces.Add(PawnPromoted);
 
 	PawnPromoted->SetActorHiddenInGame(true);
 	PawnPromoted->SetActorEnableCollision(false);
 	
-	// GENERA LA REGINA
 	if (bIsGameMove)
 	{
-		// TODO: Queste righe di codice  creano il widget per la scelta della pedina da promuovere
-		// Dopodiché la funzione che genera effettivamente la pedina promossa è delegata al click di uno dei 4 bottoni
-		// Attraverso la funzione SetPromotionChoice viene effettivamente spawnato il pezzo.
-		
+		// If the Player is White, leave the possibility to choose
+		// If the Player is Black, generate a Queen
 		if (Player == 0)
 		{
+			// Create the PromotionWidget. The Human can chose between Queen, Bishop, Rook, Knight
 			Promotion = CreateWidget<UUserWidget>(GetGameInstance(), PromotionClass);
 
 			if (Promotion)
 			{
 				Promotion->AddToViewport(1);
-				UGameplayStatics::SetGamePaused(GetWorld(), true);  // Metti in pausa il gioco
+				
+				// Pause the game
+				UGameplayStatics::SetGamePaused(GetWorld(), true);
 			}
 
 			CurrentPositionForPromotion = Position;
@@ -361,9 +340,7 @@ void AChess_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Po
 			APiece* Piece = (*GField->TileMap.Find(Position))->GetPiece();
 			Piece->SetIsPromoted(true);
 			GField->OnResetEvent.AddDynamic(Piece, &APiece::SelfDestroy);			
-
 		}
-		
 	}
 	else
 	{
@@ -372,11 +349,10 @@ void AChess_GameMode::HandlePawnPromotion(const int32 Player, const FVector2D Po
 	}
 }
 
-void AChess_GameMode::SetPromotionChoice(EPieceType PromotionType)
+void AChess_GameMode::SetPromotionChoice(const EPieceType PromotionType)
 {
 	if (Promotion)
 	{
-		//Promotion->RemoveFromViewport();
 		Promotion->RemoveFromParent();
 		UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
@@ -402,14 +378,7 @@ void AChess_GameMode::SetPromotionChoice(EPieceType PromotionType)
 	GField->OnResetEvent.AddDynamic(Piece, &APiece::SelfDestroy);			
 
 	Piece->SetIsPromoted(true);
-	
-	//Piece = (*GField->TileMap.Find(CurrentPositionForPromotion))->GetPiece();
-	if (Piece->IsPromoted())
-	{
-		// Aggiungo 1 alle mosse eseguite dopo la promozione
-		Piece->IncreaseNumberMovesSincePromotion();
-	}
-
+	Piece->IncreaseNumberMovesSincePromotion();
 }
 
 void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(const FVector2D End, const bool bIsGameMove)
@@ -424,10 +393,10 @@ void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(const FVector2D End, co
 			Piece->SetActorHiddenInGame(true);
 			Piece->SetActorEnableCollision(false);
 
-			APiece* PieceToRespawn = nullptr;
+			APiece* PieceToRespawn;
 			(Piece->GetPieceOwner() == 0)
-				? PieceToRespawn = WPiecesKilled.Pop()
-				: PieceToRespawn = BPiecesKilled.Pop();
+				? PieceToRespawn = WhiteCapturedPieces.Pop()
+				: PieceToRespawn = BlackCapturedPieces.Pop();
 
 			(*GField->TileMap.Find(End))->SetTileStatus(
 				PieceToRespawn->GetPieceOwner(),
@@ -439,14 +408,10 @@ void AChess_GameMode::HandleUndoMoveForPawnsAndPromotion(const FVector2D End, co
 			PieceToRespawn->SetActorEnableCollision(true);
 		}
 	}
-
 }
 
 bool AChess_GameMode::IsIllegalMove()
 {
-	// Given a state of Match
-
-	// Check for all Pieces if there's at least one illegal move
 	for(const auto& CurrentTile : GField->TileArray)
 	{
 		if(CurrentTile->GetTileOwner() == (CurrentPlayer ^ 1))
@@ -539,46 +504,12 @@ bool AChess_GameMode::IsCheckMate(const int32 Player, const bool bIsGameMove)
 	return true;
 }
 
-bool AChess_GameMode::IsWinMove(const int32 Player)
-{
-	for(const auto& CurrentTile : GField->TileArray)
-	{
-		if(CurrentTile->GetTileOwner() == (Player ^ 1))
-		{
-			GField->SetSelectedTile(CurrentTile->GetGridPosition());
-
-			TArray<FVector2D> CurrentLegalMoves;
-			
-			CurrentPlayer = GetNextPlayer(CurrentPlayer);
-			CurrentLegalMoves = GField->LegalMoves(CurrentTile->GetGridPosition());
-			CurrentPlayer = GetNextPlayer(CurrentPlayer);
-			
-			if(CurrentLegalMoves.Num() > 0)
-			{
-				return false;
-			}
-		}
-	}
-	
-	IsGameOver = true;
-	Players[CurrentPlayer]->OnWin();
-	for (int32 i = 0; i < Players.Num(); i++)
-	{
-		if (i != CurrentPlayer)
-		{
-			Players[i]->OnLose();
-		}
-	}
-
-	return true;
-}
-
 void AChess_GameMode::UndoGesture(bool bIsGameMove)
 {
-
-	//if (Moves.Num() > 0 && CurrentPlayer == 0 || Moves.Num() > 0 && IsGameOver)
-	if (Moves.Num() > 0 && CurrentPlayer == 0)
+	if (Moves.Num() > 0 && CurrentPlayer == 0 && CanClickUndoButton)
 	{
+		CanClickUndoButton = false;
+
 		GField->ResetGameStatusField();
 		UndoMove(bIsGameMove);
 
@@ -590,6 +521,8 @@ void AChess_GameMode::UndoGesture(bool bIsGameMove)
 					UndoMove(bIsGameMove);
 				}, 0.5f, false);
 		}
+		
+		CanClickUndoButton = true;
 	}
 }
 
