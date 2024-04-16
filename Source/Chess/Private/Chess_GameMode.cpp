@@ -522,7 +522,6 @@ void AChess_GameMode::UndoGesture(bool bIsGameMove)
 					CanClickUndoButton = true;
 				}, 0.5f, false);
 		}
-		
 	}
 }
 
