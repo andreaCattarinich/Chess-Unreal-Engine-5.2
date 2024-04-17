@@ -29,15 +29,6 @@ APiece::APiece()
 		StaticMeshComponent->SetStaticMesh(MeshFinder.Object);
 	}
 */
-	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>
-		StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.uasset"));
-	if (StaticMeshAsset.Succeeded())
-	{
-		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
-	}
-
-
 	const FString MaterialPath =
 	FString("/Game/Materials/Textures/M_") +
 	FString("B") +
@@ -73,6 +64,13 @@ void APiece::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+	if (StaticMeshAsset.Succeeded())
+	{
+		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+	}
 }
 
 void APiece::SetPieceID()
