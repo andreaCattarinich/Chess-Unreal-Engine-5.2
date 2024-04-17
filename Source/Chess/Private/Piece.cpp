@@ -30,12 +30,24 @@ APiece::APiece()
 	}
 */
 	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.uasset"));
 	if (StaticMeshAsset.Succeeded())
 	{
 		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
 	}
-	
+
+
+	const FString MaterialPath =
+	FString("/Game/Materials/Textures/M_") +
+	FString("B") +
+	FString("Pawn");
+
+	UMaterialInterface* Material = LoadObject<UMaterialInterface>(
+		nullptr, *MaterialPath);
+
+	StaticMeshComponent->SetMaterial(0, Material);
+
 	PieceGridPosition = FVector2D(-1, -1);
 	PlayerOwner = -1;
 	PieceID = -100;
