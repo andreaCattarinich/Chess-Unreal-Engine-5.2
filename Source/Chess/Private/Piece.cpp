@@ -20,7 +20,7 @@ APiece::APiece()
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
-
+/*
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
 		TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
 
@@ -28,7 +28,14 @@ APiece::APiece()
 	{
 		StaticMeshComponent->SetStaticMesh(MeshFinder.Object);
 	}
-
+*/
+	
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+	if (StaticMeshAsset.Succeeded())
+	{
+		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+	}
+	
 	PieceGridPosition = FVector2D(-1, -1);
 	PlayerOwner = -1;
 	PieceID = -100;
@@ -75,7 +82,7 @@ void APiece::SetGridPosition(const double InX, const double InY)
 void APiece::SetTexture() const
 {
 	// W: white
-	// B: black
+	// B: black	
 	const FString StringOwner = (PlayerOwner) ? FString("B") : FString("W");
 
 	const FString StringType = PieceTypeToString(PieceType);
