@@ -29,15 +29,18 @@ APiece::APiece()
 		StaticMeshComponent->SetStaticMesh(MeshFinder.Object);
 	}
 */
-	const FString MaterialPath =
-	FString("/Game/Materials/Textures/M_") +
-	FString("B") +
-	FString("Pawn");
-
-	UMaterialInterface* Material = LoadObject<UMaterialInterface>(
-		nullptr, *MaterialPath);
-
-	StaticMeshComponent->SetMaterial(0, Material);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		PlaneMeshFinder(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+	if (PlaneMeshFinder.Succeeded())
+	{
+		//StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+		TempPlaneMesh = PlaneMeshFinder.Object;
+	}
+	else
+	{
+		TempPlaneMesh = nullptr;
+		UE_LOG(LogTemp, Error, TEXT("Impossibile trovare Shape_Plane"));
+	}
 
 	PieceGridPosition = FVector2D(-1, -1);
 	PlayerOwner = -1;
@@ -64,12 +67,10 @@ void APiece::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>
-		StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
-	if (StaticMeshAsset.Succeeded())
+	
+	if (TempPlaneMesh && StaticMeshComponent)
 	{
-		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+		StaticMeshComponent->SetStaticMesh(TempPlaneMesh);
 	}
 }
 
