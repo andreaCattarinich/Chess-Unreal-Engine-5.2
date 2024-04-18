@@ -1,5 +1,5 @@
-# Chess 5137057
-**Author:** Andrea Cattarinich 
+# Chess 
+**Author:** Andrea Cattarinich 5137057
 
 ## Description
 The game features a startup screen where players can select the game mode: Random or AI. 
