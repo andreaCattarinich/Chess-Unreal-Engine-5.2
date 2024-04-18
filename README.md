@@ -1,21 +1,24 @@
 # Chess 5137057
-Andrea Cattarinich 
+**Author:** Andrea Cattarinich 
 
-## Descrizione
-Il gioco presenta una schermata di avvio in cui è possibile scegliere la modalità di gioco (Random o AI).
-Ho sviluppato l'AI con Minimax Alpha Beta Pruning con profondità di ricerca 3.
+## Description
+The game features a startup screen where players can select the game mode: Random or AI. 
+The AI has been implemented using the Minimax algorithm with Alpha Beta Pruning and a search depth of 3.
 
-## Installazione
-1) Clona la repository sul tuo computer:
-   git clone https://github.com/andreaCattarinich/ChessRefactoring.git
-
-## Avvio del Gioco
-È importante notare che **è necessario avviare il gioco due volte** per assicurarsi che le shaders vengano caricate correttamente.
-
-1) Avvia il gioco per la prima volta (dal proprio IDE).
-2) Chiudi il gioco.
-3) Avvia nuovamente il gioco (dal proprio IDE).
+## Installation
+1. Clone the repository to your computer:
+git clone https://github.com/andreaCattarinich/ChessRefactoring.git
 
 
+
+## Starting the Game
+**Note:** It is necessary to start the game twice to ensure the shaders are loaded correctly.
+
+1. Start the game for the first time (from your IDE).
+2. Close the game.
+3. Start the game again (from your IDE).
+
+---
 
 Andrea Cattarinich
+
