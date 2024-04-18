@@ -37,7 +37,6 @@ void AChess_MinimaxPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AChess_MinimaxPlayer::OnTurn()
 {
-	GameMode->GField->CanClickReset = false;
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Minimax) Turn"));
 	GameInstance->SetTurnMessage(TEXT("AI (Minimax) Turn"));
 
@@ -69,7 +68,6 @@ void AChess_MinimaxPlayer::OnTurn()
 				GetWorld()->GetTimerManager().SetTimer(TimerHandle2, [BestMove, this]()
 					{
 						GameMode->DoMove(BestMove.End, true);
-						GameMode->GField->CanClickReset = true;
 					}, 1.0f, false);
 			}
 		}, 0.25f, false);

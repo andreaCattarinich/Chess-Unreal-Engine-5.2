@@ -77,9 +77,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FOnReset OnResetEvent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool CanClickReset = true;
-	
 	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ATile> TileClassDark;

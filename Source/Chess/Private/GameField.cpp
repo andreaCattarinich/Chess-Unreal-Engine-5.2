@@ -385,12 +385,13 @@ void AGameField::ShowLegalMovesInTheField()
 
 void AGameField::ResetField()
 {
-	if(!CanClickReset)
+	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
+
+	// Black must do the move. After then you can reset the field
+	if(GameMode->Moves.Num() % 2 == 1)
 	{
 		return;
 	}
-
-	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 	
 	for (ATile* CurrTile : TileArray)
 	{

@@ -20,14 +20,28 @@ APiece::APiece()
 	// every actor has a RootComponent that defines the transform in the World
 	SetRootComponent(Scene);
 	StaticMeshComponent->SetupAttachment(Scene);
-	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
-	
-	if (StaticMeshAsset.Succeeded())
+/*
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshFinder(
+		TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+
+	if (MeshFinder.Succeeded())
 	{
-		StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+		StaticMeshComponent->SetStaticMesh(MeshFinder.Object);
 	}
-	
+*/
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>
+		PlaneMeshFinder(TEXT("/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane"));
+	if (PlaneMeshFinder.Succeeded())
+	{
+		//StaticMeshComponent->SetStaticMesh(StaticMeshAsset.Object);
+		TempPlaneMesh = PlaneMeshFinder.Object;
+	}
+	else
+	{
+		TempPlaneMesh = nullptr;
+		UE_LOG(LogTemp, Error, TEXT("Impossibile trovare Shape_Plane"));
+	}
+
 	PieceGridPosition = FVector2D(-1, -1);
 	PlayerOwner = -1;
 	PieceID = -100;
@@ -53,6 +67,11 @@ void APiece::BeginPlay()
 {
 	Super::BeginPlay();
 	GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
+	
+	if (TempPlaneMesh && StaticMeshComponent)
+	{
+		StaticMeshComponent->SetStaticMesh(TempPlaneMesh);
+	}
 }
 
 void APiece::SetPieceID()

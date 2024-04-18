@@ -134,12 +134,6 @@ void AChess_GameMode::TurnNextPlayer()
 {
 	MoveCounter += 1;
 	CurrentPlayer = GetNextPlayer(CurrentPlayer);
-
-	if(CurrentPlayer == 0)
-	{
-		GField->CanClickReset = true;	
-	}
-
 	Players[CurrentPlayer]->OnTurn();
 }
 
