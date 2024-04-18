@@ -38,7 +38,6 @@ void AChess_GameMode::BeginPlay()
 	Super::BeginPlay();
 
 	IsGameOver = false;
-
 	MoveCounter = 0;
 
 	AChess_HumanPlayer* HumanPlayer = Cast<AChess_HumanPlayer>(*TActorIterator<AChess_HumanPlayer>(GetWorld()));
