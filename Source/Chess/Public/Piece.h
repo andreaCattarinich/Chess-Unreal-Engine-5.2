@@ -48,10 +48,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UStaticMeshComponent* StaticMeshComponent;
-
-	UPROPERTY()
-		UStaticMesh* TempPlaneMesh;
-	
+		
 	// To track the last used ID
 	static int32 NewPieceID;
 

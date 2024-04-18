@@ -33,9 +33,11 @@ void AChess_RandomPlayer::OnTurn()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
 	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
-	
+	GameMode->GField->CanClickReset = false;
 	// AI Random Decide the Move
-	DecideMove(); 
+	DecideMove();
+	
+	GameMode->GField->CanClickReset = true;
 }
 
 void AChess_RandomPlayer::OnWin()

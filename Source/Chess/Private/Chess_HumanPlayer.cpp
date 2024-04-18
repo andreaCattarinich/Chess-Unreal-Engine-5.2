@@ -45,6 +45,7 @@ void AChess_HumanPlayer::Tick(float DeltaTime)
 void AChess_HumanPlayer::OnTurn()
 {
 	IsMyTurn = true;
+
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Your Turn"));
 	GameInstance->SetTurnMessage(TEXT("Human Turn!"));
 }

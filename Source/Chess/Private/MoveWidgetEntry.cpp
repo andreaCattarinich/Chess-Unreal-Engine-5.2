@@ -183,7 +183,7 @@ void UMoveWidgetEntry::OnBtnClick()
 	}
 	
 	// Black must do the move. After then you can reset the field
-	if(GameMode->Moves.Num() % 2 == 1 || GameMode->Moves.Num() == NumberMove*2)
+	if(GameMode->Moves.Num() % 2 == 1 || GameMode->Moves.Num() == NumberMove*2 || !GameMode->IsGameOver)
 	{
 		return;
 	}
