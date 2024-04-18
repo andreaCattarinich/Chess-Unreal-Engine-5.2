@@ -12,7 +12,7 @@ git clone https://github.com/andreaCattarinich/ChessRefactoring.git
 
 
 ## Starting the Game
-**Note:** It is necessary to start the game twice to ensure the shaders are loaded correctly.
+**Note:** **It is necessary to start the game twice** to ensure the shaders are loaded correctly.
 
 1. Start the game for the first time (from your IDE).
 2. Close the game.
