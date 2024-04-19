@@ -388,7 +388,7 @@ void AGameField::ResetField()
 	AChess_GameMode* GameMode = Cast<AChess_GameMode>(GetWorld()->GetAuthGameMode());
 
 	// Black must do the move. After then you can reset the field
-	if(GameMode->Moves.Num() % 2 == 1)
+	if(GameMode->Moves.Num() % 2 == 1 && !GameMode->IsGameOver)
 	{
 		return;
 	}
